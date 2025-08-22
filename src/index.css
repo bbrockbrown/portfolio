@@ -60,6 +60,19 @@ body {
   background-color: transparent;
 }
 
+/* Mobile viewport fixes */
+html {
+  /* CSS Custom Properties for dynamic viewport */
+  --vh: 1vh;
+}
+
+/* Mobile-first approach for full height */
+.mobile-full-height {
+  height: 100vh; /* Fallback for older browsers */
+  height: calc(var(--vh, 1vh) * 100); /* Dynamic viewport height */
+  min-height: -webkit-fill-available; /* Safari iOS */
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
@@ -157,7 +170,6 @@ button {
 
 *:not(.p5Canvas) {
   z-index: 10;
-  position: relative;
 }
 
 .p5Canvas {

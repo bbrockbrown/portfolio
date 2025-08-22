@@ -7,12 +7,35 @@ export default function sketch(p5) {
   var particles = [];
   var flowfield;
   var steps = 0;
+  var randomSeed;
+
+  // Function to get proper viewport dimensions
+  const getViewportDimensions = () => {
+    if (window.visualViewport) {
+      return {
+        width: window.visualViewport.width,
+        height: window.visualViewport.height
+      };
+    }
+    // Fallback: use document.documentElement for better mobile support
+    return {
+      width: document.documentElement.clientWidth || p5.windowWidth,
+      height: document.documentElement.clientHeight || p5.windowHeight
+    };
+  };
 
   p5.setup = () => {
+    // Set a new random seed each time setup runs
+    randomSeed = Math.floor(Math.random() * 100000);
+    p5.randomSeed(randomSeed);
+    p5.noiseSeed(randomSeed);
+    
     p5.pixelDensity(5)
-    p5.createCanvas(p5.windowWidth, p5.windowHeight);
-    cols = p5.floor(p5.windowWidth / scl);
-    rows = p5.floor(p5.windowHeight / scl);
+    // Get proper viewport dimensions for mobile
+    const viewport = getViewportDimensions();
+    p5.createCanvas(viewport.width, viewport.height);
+    cols = p5.floor(viewport.width / scl);
+    rows = p5.floor(viewport.height / scl);
     fr = p5.createP('');
 
     flowfield = new Array(cols * rows);
@@ -21,6 +44,15 @@ export default function sketch(p5) {
       particles[i] = new Particle();
     }
     p5.background(51);
+  };
+
+  // Handle window resize for mobile viewport changes
+  p5.windowResized = () => {
+    const viewport = getViewportDimensions();
+    p5.resizeCanvas(viewport.width, viewport.height);
+    cols = p5.floor(viewport.width / scl);
+    rows = p5.floor(viewport.height / scl);
+    flowfield = new Array(cols * rows);
   };
 
   p5.draw = () => {
@@ -54,7 +86,8 @@ export default function sketch(p5) {
 
   class Particle {
     constructor() {
-      this.pos = p5.createVector(p5.random(p5.windowWidth), p5.random(p5.windowHeight));
+      const viewport = getViewportDimensions();
+      this.pos = p5.createVector(p5.random(viewport.width), p5.random(viewport.height));
       this.vel = p5.createVector(0, 0);
       this.acc = p5.createVector(0, 0);
       this.maxspeed = 4;
@@ -95,20 +128,21 @@ export default function sketch(p5) {
     }
 
     edges() {
-      if (this.pos.x > p5.windowWidth) {
+      const viewport = getViewportDimensions();
+      if (this.pos.x > viewport.width) {
         this.pos.x = 0;
         this.updatePrev();
       }
       if (this.pos.x < 0) {
-        this.pos.x = p5.windowWidth;
+        this.pos.x = viewport.width;
         this.updatePrev();
       }
-      if (this.pos.y > p5.windowHeight) {
+      if (this.pos.y > viewport.height) {
         this.pos.y = 0;
         this.updatePrev();
       }
       if (this.pos.y < 0) {
-        this.pos.y = p5.windowHeight;
+        this.pos.y = viewport.height;
         this.updatePrev();
       }
     }
