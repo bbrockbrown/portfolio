@@ -1,10 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Fira Code", monospace, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -154,11 +155,61 @@ button {
   }
 }
 
-.p5Canvas {
-  position: absolute;
-  z-index: 0
+*:not(.p5Canvas) {
+  z-index: 10;
+  position: relative;
 }
 
-.react-p5-wrapper {
-  z-index: 0
+.p5Canvas {
+  position: absolute;
+  z-index: 0;
+  opacity: 0.7;
 }
+
+/* Custom gentle bounce animation */
+@keyframes bounce-gentle {
+  0% {
+    transform: translateY(0) scale(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  25% {
+    transform: translateY(-2px) scale(1);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.05);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  75% {
+    transform: translateY(-2px) scale(1.02);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+  100% {
+    transform: scale(1.0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes infinite-bounce {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+  75% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s, infinite-bounce 2s infinite;
+  animation-delay: 0s, 2s;
+}
+
