@@ -15,21 +15,38 @@ export default function Home() {
     }, 500);
 
     // Set CSS custom property for dynamic viewport height (mobile fix)
+    let viewportTimeout: NodeJS.Timeout;
+    let lastHeight = window.innerHeight;
+    
     const setViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      const currentHeight = window.innerHeight;
+      const heightChange = currentHeight - lastHeight;
+      
+      // Only update if height INCREASED (browser UI hidden, more space available)
+      // Skip when height decreases (browser UI appearing) to avoid choppy updates
+      if (heightChange > 50) {
+        const vh = currentHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        lastHeight = currentHeight;
+      }
+    };
+
+    const debouncedSetViewportHeight = () => {
+      clearTimeout(viewportTimeout);
+      viewportTimeout = setTimeout(setViewportHeight, 300);
     };
 
     // Set initial value
     setViewportHeight();
 
-    // Update on resize and orientation change
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('orientationchange', setViewportHeight);
+    // Update on resize and orientation change with debouncing
+    window.addEventListener('resize', debouncedSetViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight); // Immediate for orientation
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('resize', setViewportHeight);
+      clearTimeout(viewportTimeout);
+      window.removeEventListener('resize', debouncedSetViewportHeight);
       window.removeEventListener('orientationchange', setViewportHeight);
     };
   }, []);

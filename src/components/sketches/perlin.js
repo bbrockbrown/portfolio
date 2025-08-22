@@ -8,6 +8,8 @@ export default function sketch(p5) {
   var flowfield;
   var steps = 0;
   var randomSeed;
+  var lastResizeTime = 0;
+  var initialViewport = null;
 
   // Function to get proper viewport dimensions
   const getViewportDimensions = () => {
@@ -24,6 +26,17 @@ export default function sketch(p5) {
     };
   };
 
+  // Debounced resize function to prevent choppy re-renders
+  const debouncedResize = (callback, delay = 300) => {
+    return (...args) => {
+      const now = Date.now();
+      if (now - lastResizeTime > delay) {
+        lastResizeTime = now;
+        callback(...args);
+      }
+    };
+  };
+
   p5.setup = () => {
     // Set a new random seed each time setup runs
     randomSeed = Math.floor(Math.random() * 100000);
@@ -33,6 +46,7 @@ export default function sketch(p5) {
     p5.pixelDensity(5)
     // Get proper viewport dimensions for mobile
     const viewport = getViewportDimensions();
+    initialViewport = { ...viewport }; // Store initial viewport for comparison
     p5.createCanvas(viewport.width, viewport.height);
     cols = p5.floor(viewport.width / scl);
     rows = p5.floor(viewport.height / scl);
@@ -47,13 +61,32 @@ export default function sketch(p5) {
   };
 
   // Handle window resize for mobile viewport changes
-  p5.windowResized = () => {
+  const handleResize = () => {
     const viewport = getViewportDimensions();
+    
+    if (initialViewport) {
+      const widthDiff = Math.abs(viewport.width - initialViewport.width);
+      const heightChange = viewport.height - initialViewport.height;
+      
+      // Only resize if:
+      // 1. Width changed significantly (rotation, split screen, etc.)
+      // 2. Height INCREASED (browser UI hidden, more space available)
+      // Skip resizing when height decreases (browser UI appearing)
+      if (widthDiff < 50 && heightChange <= 0) {
+        return; // Skip resize for width unchanged + height same/smaller
+      }
+    }
+    
     p5.resizeCanvas(viewport.width, viewport.height);
     cols = p5.floor(viewport.width / scl);
     rows = p5.floor(viewport.height / scl);
     flowfield = new Array(cols * rows);
+    
+    // Update the reference viewport
+    initialViewport = { ...viewport };
   };
+
+  p5.windowResized = debouncedResize(handleResize, 500);
 
   p5.draw = () => {
     if (steps === 3000) return;
