@@ -175,7 +175,8 @@ button {
 .p5Canvas {
   position: absolute;
   z-index: 0;
-  opacity: 0.7;
+  /* opacity: 0.7; */
+  background: rgb(20, 20, 20) !important;
 }
 
 /* Custom gentle bounce animation */

@@ -76,17 +76,17 @@ export default function Home() {
         <section className='mobile-full-height flex items-center justify-center'>
           <div
             className={`
-                text-center text-white px-8 py-12 rounded-lg backdrop-blur-sm bg-black/20
+                text-center text-white px-8 py-12 rounded-lg backdrop-blur-sm bg-black/10
                 transition-all duration-1000 ease-out
                 ${showText ? 'opacity-100 scale-100 animate-bounce-gentle' : 'opacity-0 scale-75'}
               `}
           >
             <h1 className='text-4xl md:text-6xl font-bold mb-4'>Hi there,</h1>
             <p className='text-xl md:text-2xl mb-2'>
-              My name is <span className='text-blue-400'>Brock Brown</span>.
+              My name is <span className='font-bold'>Brock Brown</span>.
             </p>
             <p className='text-lg md:text-xl'>
-              I am a <span className='text-green-400'>fullstack engineer</span>.
+              I am a <span className='font-bold'>fullstack engineer</span>.
             </p>
           </div>
           {/* Refresh button */}
@@ -113,7 +113,7 @@ export default function Home() {
               onClick={handleWorkRef}
               title='Scroll to projects'
             >
-              <ChevronDown color='white' className='w-6 h-6' />
+              <ChevronDown color='white' className='md:w-10 w-7 md:h-10 h-7' />
             </button>
           </div>
         </section>

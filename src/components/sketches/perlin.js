@@ -57,7 +57,7 @@ export default function sketch(p5) {
     for (var i = 0; i < 1000; i++) {
       particles[i] = new Particle();
     }
-    p5.background(51);
+    p5.background(20);
   };
 
   // Handle window resize for mobile viewport changes
@@ -148,8 +148,8 @@ export default function sketch(p5) {
 
     show() {
       let n = p5.noise(this.pos.x * 0.005, this.pos.y * 0.005, zoff * 2);
-      let hu = p5.map(n, 0, 1, 0, 360);  
-      p5.stroke(200, hu, 100, 25);       
+      let hu = p5.map(n, 0, 1, 0, 360); // Deep blue range for better text readability
+      p5.stroke(hu, 0, 200, 15);       
       p5.strokeWeight(1);
       p5.line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
       this.updatePrev();
