@@ -222,7 +222,6 @@ button {
 }
 
 .animate-bounce-gentle {
-  animation: bounce-gentle 2s, infinite-bounce 2s infinite;
-  animation-delay: 0s, 2s;
+  animation: bounce-gentle 2s;
 }
 
