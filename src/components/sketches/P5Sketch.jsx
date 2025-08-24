@@ -3,5 +3,5 @@ import perlin from './perlin';
 
 
 export default function P5Sketch({ refreshKey = 0 }) {
-  return <ReactP5Wrapper key={refreshKey} className='p5-wrapper' sketch={perlin} />
+  return <ReactP5Wrapper key={refreshKey} className='absolute inset-0 w-full h-full' sketch={perlin} />
 }

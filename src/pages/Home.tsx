@@ -66,14 +66,14 @@ export default function Home() {
   return (
     <div className='relative'>
       {/* P5 Background - only on home page */}
-      <div className='fixed inset-0 z-0'>
+      <div className='fixed inset-0 z-0 w-full h-full'>
         <P5Sketch refreshKey={p5RefreshKey} />
       </div>
 
       {/* Main content container */}
       <div className='relative z-10'>
         {/* Hero section with P5 background */}
-        <section className='mobile-full-height flex items-center justify-center'>
+        <section className='min-h-screen flex items-center justify-center'>
           <div
             className={`
                 text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-black/10
@@ -154,7 +154,7 @@ export default function Home() {
         </section> */}
 
         {/* Additional content sections can go here */}
-        <section ref={workRef} className='min-h-screen bg-[rgb(20,20,20)] px-8 py-16'>
+        <section ref={workRef} className='min-h-screen bg-[rgb(20,20,20)] px-8 py-16 relative z-10'>
           <div className='max-w-4xl mx-auto'>
             <h2 className='text-3xl font-bold text-white mb-8'>Projects</h2>
             <div className='text-gray-300'>
