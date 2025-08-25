@@ -14,40 +14,8 @@ export default function Home() {
       setShowText(true);
     }, 500);
 
-    // Set CSS custom property for dynamic viewport height (mobile fix)
-    let viewportTimeout: NodeJS.Timeout;
-    let lastHeight = window.innerHeight;
-
-    const setViewportHeight = () => {
-      const currentHeight = window.innerHeight;
-      const heightChange = currentHeight - lastHeight;
-
-      // Only update if height INCREASED (browser UI hidden, more space available)
-      // Skip when height decreases (browser UI appearing) to avoid choppy updates
-      if (heightChange > 50) {
-        const vh = currentHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        lastHeight = currentHeight;
-      }
-    };
-
-    const debouncedSetViewportHeight = () => {
-      clearTimeout(viewportTimeout);
-      viewportTimeout = setTimeout(setViewportHeight, 300);
-    };
-
-    // Set initial value
-    setViewportHeight();
-
-    // Update on resize and orientation change with debouncing
-    window.addEventListener('resize', debouncedSetViewportHeight);
-    window.addEventListener('orientationchange', setViewportHeight); // Immediate for orientation
-
     return () => {
       clearTimeout(timer);
-      clearTimeout(viewportTimeout);
-      window.removeEventListener('resize', debouncedSetViewportHeight);
-      window.removeEventListener('orientationchange', setViewportHeight);
     };
   }, []);
 
@@ -64,7 +32,7 @@ export default function Home() {
   };
 
   return (
-    <div className='relative'>
+    <div className='relative bg-background'>
       {/* P5 Background - only on home page */}
       <div className='fixed inset-0 z-0 w-full h-full'>
         <P5Sketch refreshKey={p5RefreshKey} />
@@ -73,10 +41,10 @@ export default function Home() {
       {/* Main content container */}
       <div className='relative z-10'>
         {/* Hero section with P5 background */}
-        <section className='min-h-screen flex items-center justify-center'>
+        <section className='full-viewport-height flex items-center justify-center'>
           <div
             className={`
-                text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-black/10
+                text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-background/10
                 transition-all duration-1000 ease-out 
                 w-[95%] sm:w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]
                 max-h-[85vh] overflow-y-auto

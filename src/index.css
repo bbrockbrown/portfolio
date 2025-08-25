@@ -19,11 +19,11 @@
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.1913 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.1913 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.1913 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -42,7 +42,7 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-foreground: oklch(0.1913 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
@@ -68,17 +68,31 @@ html {
   padding: 0;
 }
 
-/* Mobile viewport fixes */
+/* Force dark mode */
 html {
-  /* CSS Custom Properties for dynamic viewport */
-  --vh: 1vh;
+  color-scheme: dark;
 }
 
-/* Mobile-first approach for full height */
+html.dark {
+  color-scheme: dark;
+}
+
+/* Override any light mode styles */
+html.light {
+  color-scheme: dark !important;
+}
+
+/* Modern viewport height units for mobile */
 .mobile-full-height {
   height: 100vh; /* Fallback for older browsers */
-  height: calc(var(--vh, 1vh) * 100); /* Dynamic viewport height */
-  min-height: -webkit-fill-available; /* Safari iOS */
+  height: 100dvh; /* Dynamic viewport height - modern browsers */
+  height: 100svh; /* Small viewport height - when browser UI is visible */
+}
+
+/* For sections that should always be full height */
+.full-viewport-height {
+  height: 100vh; /* Fallback */
+  height: 100dvh; /* Dynamic viewport height */
 }
 
 button {
@@ -134,7 +148,7 @@ button {
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.1913 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);

@@ -11,18 +11,20 @@ export default function sketch(p5) {
   var lastResizeTime = 0;
   var initialViewport = null;
 
-  // Function to get proper viewport dimensions
+  // Function to get proper viewport dimensions using modern viewport units
   const getViewportDimensions = () => {
+    // Use visualViewport API for most accurate mobile viewport
     if (window.visualViewport) {
       return {
         width: window.visualViewport.width,
         height: window.visualViewport.height
       };
     }
-    // Fallback: use document.documentElement for better mobile support
+    
+    // Fallback: use window dimensions
     return {
-      width: document.documentElement.clientWidth || p5.windowWidth,
-      height: document.documentElement.clientHeight || p5.windowHeight
+      width: window.innerWidth || p5.windowWidth,
+      height: window.innerHeight || p5.windowHeight
     };
   };
 
@@ -57,23 +59,22 @@ export default function sketch(p5) {
     for (var i = 0; i < 1000; i++) {
       particles[i] = new Particle();
     }
-    p5.background(20);
+    p5.background(20, 20, 20);
   };
 
   // Handle window resize for mobile viewport changes
   const handleResize = () => {
     const viewport = getViewportDimensions();
     
+    // Only resize on significant changes to prevent mobile UI issues
     if (initialViewport) {
       const widthDiff = Math.abs(viewport.width - initialViewport.width);
-      const heightChange = viewport.height - initialViewport.height;
+      const heightDiff = Math.abs(viewport.height - initialViewport.height);
       
-      // Only resize if:
-      // 1. Width changed significantly (rotation, split screen, etc.)
-      // 2. Height INCREASED (browser UI hidden, more space available)
-      // Skip resizing when height decreases (browser UI appearing)
-      if (widthDiff < 50 && heightChange <= 0) {
-        return; // Skip resize for width unchanged + height same/smaller
+      // Only resize if there's a significant change (more than 100px)
+      // This prevents constant resizing when mobile browser UI shows/hides
+      if (widthDiff < 100 && heightDiff < 100) {
+        return; // Skip resize for small changes
       }
     }
     
@@ -86,7 +87,7 @@ export default function sketch(p5) {
     initialViewport = { ...viewport };
   };
 
-  p5.windowResized = debouncedResize(handleResize, 500);
+  p5.windowResized = debouncedResize(handleResize, 1000); // Longer debounce for mobile
 
   p5.draw = () => {
     if (steps === 3000) return;
