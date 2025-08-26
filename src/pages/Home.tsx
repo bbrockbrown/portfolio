@@ -69,7 +69,7 @@ export default function Home() {
               math-driven animations like the one behind this page, I'm always eager to learn and
               grow through new opportunities.
             </p>
-            <p className='text-sm sm:text-base md:text-lg lg:text-xl mb-2 md:mb-3'>
+            <p className='text-sm sm:text-sm md:text-base mt-1 md:mt-2 lg:text-lg mb-2 md:mb-3 leading-relaxed'>
               Check out some of the things I have built below!
             </p>
             <p className='text-xs sm:text-xs md:text-xs mt-1 opacity-80'>

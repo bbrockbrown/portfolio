@@ -81,7 +81,7 @@ export default function sketch(p5) {
       }
     }
     
-    p5.resizeCanvas(viewport.width, viewport.height);
+    p5.image(viewport.width, viewport.height);
     cols = p5.floor(viewport.width / scl);
     rows = p5.floor(viewport.height / scl);
     flowfield = new Array(cols * rows);
