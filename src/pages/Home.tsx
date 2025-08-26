@@ -2,6 +2,11 @@ import { useEffect, useState, useRef } from 'react';
 import P5Sketch from '@/components/sketches/P5Sketch';
 import { ChevronDown, RotateCcw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import ProjectCard from '@/components/composite/ProjectCard';
+import SectionHeader from '@/components/base/SectionHeader';
+import Footer from '@/components/layout/Footer';
+import { projects } from '@/utils/projects';
+import Silly from '@/components/composite/Silly';
 
 export default function Home() {
   const [showText, setShowText] = useState(false);
@@ -33,29 +38,32 @@ export default function Home() {
 
   return (
     <div className='relative bg-background'>
-      {/* P5 Background - only on home page */}
-      <div className='fixed inset-0 z-0 w-full h-full'>
-        <P5Sketch refreshKey={p5RefreshKey} />
-      </div>
-
+      {/* Easter egg - appears when scrolling above content */}
+      <Silly />
       {/* Main content container */}
       <div className='relative z-10'>
         {/* Hero section with P5 background */}
-        <section className='full-viewport-height flex items-center justify-center'>
+        <section className='full-viewport-height flex items-center justify-center relative overflow-hidden'>
+          {/* P5 Background - contained within this section */}
+          <div className='absolute inset-0 z-0'>
+            <P5Sketch refreshKey={p5RefreshKey} />
+          </div>
           <div
             className={`
-                text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-background/10
+                text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-background/75
                 transition-all duration-1000 ease-out 
                 w-[95%] sm:w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]
-                max-h-[85vh] overflow-y-auto
+                max-h-[85vh] overflow-y-auto relative z-10
                 ${showText ? 'opacity-100 scale-100 animate-bounce-gentle' : 'opacity-0 scale-75'}
               `}
           >
-            <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 md:mb-4'>Hi there,</h1>
-            <p className='text-lg sm:text-xl md:text-xl lg:text-2xl mb-1 md:mb-2'>
+            <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-2 md:mb-4'>
+              Hi there,
+            </h1>
+            <p className='text-base sm:text-lg md:text-xl lg:text-2xl mb-1 md:mb-2'>
               My name is <span className='font-bold'>Brock Brown</span>.
             </p>
-            <p className='text-sm sm:text-base md:text-lg lg:text-xl mb-1 md:mb-2 leading-relaxed'>
+            <p className='text-sm sm:text-sm md:text-base lg:text-lg mb-1 md:mb-2 leading-relaxed'>
               I'm a junior @ Northwestern University studying computer science with a passion for
               bringing ideas to life. Whether it's developing impactful software or crafting
               math-driven animations like the one behind this page, I'm always eager to learn and
@@ -87,7 +95,7 @@ export default function Home() {
             </TooltipContent>
           </Tooltip>
           {/* Navigation buttons */}
-          <div className='absolute translate-y-[45vh] flex gap-4'>
+          <div className='absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4'>
             <button
               className='p-2 rounded-full bg-black/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-200'
               onClick={handleWorkRef}
@@ -121,16 +129,42 @@ export default function Home() {
           </div>
         </section> */}
 
-        {/* Additional content sections can go here */}
-        <section ref={workRef} className='min-h-screen bg-[rgb(20,20,20)] px-8 py-16 relative z-10'>
-          <div className='max-w-4xl mx-auto'>
-            <h2 className='text-3xl font-bold text-white mb-8'>Projects</h2>
-            <div className='text-gray-300'>
-              <p>This section can showcase your projects and work...</p>
+        {/* Projects Section */}
+        <section
+          ref={workRef}
+          className='min-h-screen bg-background px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 relative z-10'
+        >
+          <div className='max-w-7xl mx-auto'>
+            <SectionHeader
+              title='Projects'
+              subtitle="Here are some of the things I've built. Each project represents a unique challenge and learning experience."
+            />
+
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20'>
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className={`flex ${index % 2 === 0 ? 'lg:justify-start' : 'lg:justify-end'}`}
+                >
+                  <ProjectCard
+                    title={project.title}
+                    description={project.description}
+                    image={project.image}
+                    liveUrl={project.liveUrl}
+                    githubUrl={project.githubUrl}
+                    technologies={project.technologies}
+                    animationDirection={index % 2 === 0 ? 'left' : 'right'}
+                    delay={index * 100}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </section>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

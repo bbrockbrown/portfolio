@@ -45,7 +45,9 @@ export default function sketch(p5) {
     p5.randomSeed(randomSeed);
     p5.noiseSeed(randomSeed);
     
-    p5.pixelDensity(5)
+    // Adaptive pixel density for better mobile performance
+    const isMobile = window.innerWidth <= 768;
+    p5.pixelDensity(isMobile ? 1 : Math.min(2, window.devicePixelRatio || 1));
     // Get proper viewport dimensions for mobile
     const viewport = getViewportDimensions();
     initialViewport = { ...viewport }; // Store initial viewport for comparison
@@ -70,10 +72,11 @@ export default function sketch(p5) {
     if (initialViewport) {
       const widthDiff = Math.abs(viewport.width - initialViewport.width);
       const heightDiff = Math.abs(viewport.height - initialViewport.height);
+      const isMobile = window.innerWidth <= 768;
       
-      // Only resize if there's a significant change (more than 100px)
-      // This prevents constant resizing when mobile browser UI shows/hides
-      if (widthDiff < 100 && heightDiff < 100) {
+      // More responsive thresholds: mobile needs smaller threshold for keyboard/orientation
+      const threshold = isMobile ? 50 : 100;
+      if (widthDiff < threshold && heightDiff < threshold) {
         return; // Skip resize for small changes
       }
     }
@@ -87,7 +90,12 @@ export default function sketch(p5) {
     initialViewport = { ...viewport };
   };
 
-  p5.windowResized = debouncedResize(handleResize, 1000); // Longer debounce for mobile
+  // Handle window resize for both desktop and mobile
+  p5.windowResized = () => {
+    const isMobile = window.innerWidth <= 768;
+    const delay = isMobile ? 500 : 300; // Longer delay for mobile to prevent choppy resizing
+    debouncedResize(handleResize, delay)();
+  };
 
   p5.draw = () => {
     if (steps === 3000) return;

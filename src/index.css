@@ -11,7 +11,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: var(--background);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -58,7 +58,7 @@ body {
   padding: 0;
   font-size: 100%;
   position: relative;
-  background-color: transparent;
+  background-color: var(--background);
   overflow-x: hidden;
 }
 
@@ -66,6 +66,7 @@ html {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: var(--background);
 }
 
 /* Force dark mode */
@@ -80,6 +81,25 @@ html.dark {
 /* Override any light mode styles */
 html.light {
   color-scheme: dark !important;
+}
+
+/* Prevent viewport changes on mobile scroll */
+@media (max-width: 768px) {
+  html, body {
+    /* Use fixed viewport height to prevent browser UI changes */
+    height: 100vh !important;
+    height: 100dvh !important;
+    overflow-x: hidden;
+  }
+  
+  /* Prevent the P5 canvas from being affected by viewport changes */
+  .p5Canvas {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 /* Modern viewport height units for mobile */
@@ -99,14 +119,6 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: all 0.25s ease-in;
-}
-
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
 }
 
 @theme inline {
