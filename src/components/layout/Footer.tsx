@@ -1,9 +1,17 @@
-import { Github, Linkedin, Instagram, Mail, Check } from 'lucide-react';
+import { Github, Linkedin, Instagram, Mail, Check, ChevronUp } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useState } from 'react';
 
 export default function Footer() {
   const [emailCopied, setEmailCopied] = useState(false);
   const email = 'brockbrown46@gmail.com';
+
+  const handleToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
 
   const handleCopyEmail = async () => {
     try {
@@ -15,9 +23,9 @@ export default function Footer() {
     }
   };
   return (
-    <footer className='bg-background md:w-[60%] w-[75%] justify-self-center border-t border-gray-800 py-8 px-4 sm:px-6 md:px-8'>
-      <div className='max-w-7xl mx-auto'>
-        <div className='flex flex-col items-center space-y-4'>
+    <footer className='relative flex flex-row justify-center bg-background md:w-[60%] w-[75%] justify-self-center border-t border-gray-800 py-8 px-4 sm:px-6 md:px-8'>
+      <div className='max-w-7xl w-full'>
+        <div className='flex flex-row justify-center items-start space-y-4'>
           {/* Social Links */}
           <div className='flex space-x-6'>
             <a
@@ -74,8 +82,26 @@ export default function Footer() {
                   Email copied!
                 </span>
               </div>
+              {/* To top */}
             </button>
           </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className='absolute right-0 text-gray-400 hover:text-white transition-colors duration-200'
+                onClick={handleToTop}
+                title='Scroll to top'
+              >
+                <ChevronUp
+                  strokeWidth={2}
+                  className='w-8 h-8 stroke-gray-400 hover:stroke-white duration-200 transition-all'
+                />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Back to top</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </footer>

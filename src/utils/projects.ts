@@ -19,7 +19,7 @@ export const projects: Project[] = [
       'Full-stack web application that provides a comprehensive money personality assessment platform that provides users with detailed personality-based financial insights through an interactive quiz system, complete with PDF report generation and advisor/client management capabilities.',
     image: null,
     liveUrl: 'https://www.themoneypersonality.com/',
-    technologies: ['react', 'typescript', 'python', 'flask', 'supabase'],
+    technologies: ['react', 'typescript', 'python', 'flask', 'supabase', 'stripe'],
   },
   // Highline - Alternative Investment Platform
   // A full-stack web application enabling accredited investors to discover and express interest in private equity, venture capital, and real estate deals, with comprehensive admin tools for deal management and investor onboarding.
@@ -39,7 +39,7 @@ export const projects: Project[] = [
       'Full-stack web application enabling accredited investors to discover and express interest in private equity, venture capital, and real estate deals, with comprehensive admin tools for deal management and investor onboarding.',
     image: null,
     liveUrl: 'https://highline-frontend.vercel.app/',
-    technologies: ['python', 'flask', 'postgresql', 'typescript'],
+    technologies: ['react', 'typescript', 'express', 'node', 'supabase', 'resend', 'tailwind'],
   },
   // Project Overview
   // Full-stack web application that provides a comprehensive inventory management system for the Institute for Therapy through the Arts (ITA), enabling therapists to submit order requests for therapeutic materials and administrators to review, approve, and track these orders with budget management capabilities and automated email notifications.
@@ -53,7 +53,7 @@ export const projects: Project[] = [
     description:
       'Full-stack web application that provides a comprehensive inventory management system for the Institute for Therapy through the Arts (ITA), enabling therapists to submit order requests for therapeutic materials and administrators to review, approve, and track these orders with budget management capabilities and automated email notifications.',
     image: null,
-    technologies: ['react', 'node', 'postgresql', 'supabase'],
+    technologies: ['react', 'javascript', 'node', 'postgresql', 'supabase', 'styled components', 'AG Grid'],
   },
   // Project Overview
   // Full-stack web application that provides a comprehensive Spotify music data visualization platform, allowing users to explore songs, artists, and albums through interactive radar-like graphs and user-friendly interfaces, complete with user authentication, admin dashboard, and bug reporting system.
@@ -82,34 +82,12 @@ export const projects: Project[] = [
   // Instance-based configuration management
   {
     id: '4',
-    title: 'stats.fm',
+    title: '!stats.fm',
     description:
       'Full-stack web application that provides a comprehensive Spotify music data visualization platform, allowing users to explore songs, artists, and albums through interactive radar-like graphs and user-friendly interfaces, complete with user authentication, admin dashboard, and bug reporting system.',
     image: null,
     liveUrl: 'https://bbrockbrown2.pythonanywhere.com/',
     githubUrl: 'https://github.com/bbrockbrown/spotify_visualization_dataV2',
-    technologies: ['javascript', 'bootstrap', 'python', 'flask', 'SQLite', 'spotify web api'],
+    technologies: ['javascript', 'bootstrap', 'python', 'flask', 'sqlite', 'spotify web api'],
   },
-  // {
-  //   id: '5',
-  //   title: 'Social Media Analytics Tool',
-  //   description:
-  //     'Comprehensive analytics platform for social media management. Track engagement metrics, analyze audience behavior, and schedule content across multiple platforms.',
-  //   image:
-  //     'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop&crop=entropy&auto=format',
-  //   liveUrl: 'https://example.com/social-analytics',
-  //   githubUrl: 'https://github.com/example/social-analytics',
-  //   technologies: ['Angular', 'Chart.js', 'Express.js', 'Redis'],
-  // },
-  // {
-  //   id: '6',
-  //   title: 'Collaborative Code Editor',
-  //   description:
-  //     'Real-time collaborative code editor with syntax highlighting, live cursors, and integrated chat. Perfect for pair programming and code reviews.',
-  //   image:
-  //     'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop&crop=entropy&auto=format',
-  //   liveUrl: 'https://example.com/code-editor',
-  //   githubUrl: 'https://github.com/example/code-editor',
-  //   technologies: ['Socket.io', 'Monaco Editor', 'React', 'WebRTC'],
-  // },
 ];

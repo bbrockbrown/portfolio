@@ -13,14 +13,14 @@ export default function UseAnimationFrame() {
     const rotateX = Math.sin(t / 2000) * 180 + Math.cos(t / 3500) * 90;
     const rotateY = Math.cos(t / 1800) * 270 + Math.sin(t / 4200) * 120;
     const rotateZ = Math.sin(t / 2800) * 160 + Math.cos(t / 1600) * 200;
-    
+
     // Sporadic scaling
     const scale = 0.8 + Math.abs(Math.sin(t / 2500)) * 0.6;
-    
+
     // Sporadic position changes
     const x = Math.sin(t / 3200) * 30 + Math.cos(t / 4800) * 20;
     const y = Math.cos(t / 2100) * 40 + Math.sin(t / 5500) * 25;
-    
+
     ref.current.style.transform = `
       translateX(${x}px) 
       translateY(${y}px) 
