@@ -47,6 +47,7 @@ export default function Stats() {
           const data: KeyData = await response.json();
           if (data.recent_activity.length === 0 && retryCount < 20) {
             // sometimes need to wake up service
+            console.log('retrying key data; current try', retryCount)
             await fetchKeyData(retryCount + 1);
           } else {
             setKeyData(data);
