@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import endurance from '@/assets/endurance.jpg';
 import baking from '@/assets/baking.jpg';
 import music from '@/assets/music.png';
+import kendama from '@/assets/kendama.jpeg'
 
 interface Era {
   id: string;
@@ -32,7 +33,7 @@ export default function Eras() {
         "Bottom row: Chicago Marathon '23, Mt. Elbert trail (2), Lap branding @ 29029",
       ],
       bullets: [
-        'Completed 3 marathons',
+        'Completed 3 marathons (maybe a fourth soon...?)',
         '29029 challenge (29209ft in 36hrs)',
         'Hiked Mount Elbert, CO @ 14k ft',
       ],
@@ -49,6 +50,7 @@ export default function Eras() {
       bullets: [
         '150k+ listening minutes each year for past 3 years (104+ days of pure music)',
         'Avid concert goer',
+        'Spotify > Apple Music (sorry)'
       ],
       date: 'Ongoing',
     },
@@ -59,7 +61,7 @@ export default function Eras() {
       img_caption: ["Isn't it beautiful??"],
       bullets: [
         '# Pineapple cakes baked this year: 18',
-        'Have I baked anything else? No.',
+        'Have I baked anything else? No. Do I plan on changing that? Also no.',
         'May start a business for said cakes (jk)',
       ],
       date: '2025',
@@ -67,9 +69,10 @@ export default function Eras() {
     {
       id: 'kendama',
       title: 'Kendama Prodigy Era',
-      image_url: '/placeholder-kendama.jpg',
+      image_url: kendama,
+      img_caption: ['By everywhere, I mean EVERYWHERE (including dinners).'],
       bullets: [
-        'Played kendama for 4 years',
+        'Played kendama for 4 years (brought it everywhere)',
         'Won 3 tournaments at age 12',
         'Hand-eye coordinate === mega improved',
       ],
@@ -172,7 +175,7 @@ export default function Eras() {
               <img
                 src={currentEra.image_url}
                 alt={currentEra.title}
-                className='w-full h-full object-cover cursor-pointer transition-transform hover:scale-105'
+                className={`object-cover w-full h-full cursor-pointer transition-transform hover:scale-105`}
                 onClick={openImagePopup}
               />
             )}
