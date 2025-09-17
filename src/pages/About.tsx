@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Github, Linkedin, Instagram, Mail, Check, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
+import me from '@/assets/me.jpeg';
 
 export default function About() {
   const location = useLocation();
@@ -88,7 +89,7 @@ export default function About() {
           >
             <div className='w-64 h-72 sm:w-72 sm:h-80 md:w-80 md:h-96 bg-gray-800/50 rounded-2xl overflow-hidden'>
               <img
-                src='/src/assets/me.jpeg'
+                src={me}
                 alt='Brock Brown'
                 className='w-full h-full object-cover cursor-pointer transition-transform hover:scale-105'
                 onClick={openImagePopup}
@@ -222,7 +223,7 @@ export default function About() {
       <AnimatePresence>
         {imagePopupOpen && (
           <motion.div
-            className='fixed inset-0 z-50 flex items-center justify-center bg-black/90'
+            className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 rounded-lg overflow-hidden'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -237,9 +238,9 @@ export default function About() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Image with overlays */}
-              <div className='relative max-w-full max-h-full'>
+              <div className='relative max-w-full max-h-full rounded-lg overflow-hidden'>
                 <img
-                  src='/src/assets/me.jpeg'
+                  src={me}
                   alt='Brock Brown'
                   className='max-w-full max-h-full object-contain rounded-lg'
                 />

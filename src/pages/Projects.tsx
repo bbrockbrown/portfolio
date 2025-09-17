@@ -5,7 +5,7 @@ import SectionHeader from '@/components/base/SectionHeader';
 export default function Projects() {
   return (
     <section className='min-h-screen bg-background px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-20 pb- relative z-10'>
-      <div className='max-w-7xl mx-auto mb-15 md:mb-0'>
+      <div className='max-w-7xl mx-auto mb-15 md:mb-10'>
         <SectionHeader
           title='Projects'
           subtitle="Here are some of the things I've built. Each project represents a unique challenge and learning experience."
