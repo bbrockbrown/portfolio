@@ -1,44 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Silly() {
-  const [scrollY, setScrollY] = useState(0);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
+  // on mount, wait a second to render
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
-      console.log('currScroll', currentScroll);
-      setScrollY(currentScroll);
-
-      // Mark that user has scrolled if they go beyond a threshold
-      if (currentScroll > 50) {
-        setHasScrolled(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 1500);
   }, []);
 
-  // Always show the text, but it will be positioned above content
-  const isVisible = hasScrolled && scrollY <= 10;
-  console.log('scrollY is', scrollY, 'hasScrolled', hasScrolled, 'so visible is', isVisible);
-
+  if (!isVisible) return null;
   return (
-    <div
-      className={`${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      } transition-opacity duration-300`}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '200px',
-        zIndex: 0,
-        pointerEvents: 'none',
-      }}
-    >
+    <div className='fixed top-0 left-0 w-full h-[200px] z-0 pointer-events-none opacity-100 transition-opacity duration-300'>
       <div className='absolute top-2 left-1/2 -translate-x-1/2 text-white/80 text-sm font-mono'>
         nothing to see here.
       </div>

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { SwitchCamera, ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import endurance from '@/assets/endurance.jpg';
 import baking from '@/assets/baking.jpg';
 import music from '@/assets/music.png';
@@ -16,27 +17,20 @@ interface Era {
 
 export default function Eras() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
   const [imagePopupOpen, setImagePopupOpen] = useState(false);
   const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const eras: Era[] = [
     {
-      id: 'kendama',
-      title: 'Kendama Prodigy',
-      image_url: '/placeholder-kendama.jpg',
-      bullets: [
-        'Played kendama for 4 years',
-        'Won 3 tournaments at age 12',
-        'Hand-eye coordinate === mega improved',
-      ],
-      date: 'Age 8-12',
-    },
-    {
       id: 'endurance',
       title: 'Endurance Enthusiast',
       image_url: endurance,
-      img_caption: ['Top row: Mt. Elbert trail (1), 29209 trail, me contemplating life decisions @ 29029', 'Bottom row: Chicago Marathon \'23, Mt. Elbert trail (2), Lap branding @ 29029'],
+      img_caption: [
+        'Top row: Mt. Elbert trail (1), 29209 trail, me contemplating life decisions @ 29029',
+        "Bottom row: Chicago Marathon '23, Mt. Elbert trail (2), Lap branding @ 29029",
+      ],
       bullets: [
         'Completed 3 marathons',
         '29029 challenge (29209ft in 36hrs)',
@@ -60,9 +54,9 @@ export default function Eras() {
     },
     {
       id: 'baking',
-      title: 'Pineapple Cake.',
+      title: 'Pineapple Cake Era',
       image_url: baking,
-      img_caption: ['Isn\'t it beautiful??'],
+      img_caption: ["Isn't it beautiful??"],
       bullets: [
         '# Pineapple cakes baked this year: 18',
         'Have I baked anything else? No.',
@@ -70,13 +64,35 @@ export default function Eras() {
       ],
       date: '2025',
     },
+    {
+      id: 'kendama',
+      title: 'Kendama Prodigy Era',
+      image_url: '/placeholder-kendama.jpg',
+      bullets: [
+        'Played kendama for 4 years',
+        'Won 3 tournaments at age 12',
+        'Hand-eye coordinate === mega improved',
+      ],
+      date: 'Age 8-12',
+    },
   ];
 
+  useEffect(() => {
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key === 'Escape') closeImagePopup();
+    });
+
+    return () => window.removeEventListener('keydown', closeImagePopup);
+  });
+
   const nextEra = () => {
+    setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % eras.length);
   };
 
   const prevEra = () => {
+    setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + eras.length) % eras.length);
   };
 
@@ -87,7 +103,10 @@ export default function Eras() {
       const isMobile = window.innerWidth < 768; // md breakpoint
       if (isMobile) {
         // On mobile, use larger dimensions for better viewing
-        setContainerDimensions({ width: window.innerWidth * 0.9, height: window.innerHeight * 0.7 });
+        setContainerDimensions({
+          width: window.innerWidth * 0.9,
+          height: window.innerHeight * 0.7,
+        });
       } else {
         // On desktop, use container dimensions
         const rect = containerRef.current.getBoundingClientRect();
@@ -103,7 +122,7 @@ export default function Eras() {
 
   return (
     <motion.div
-      className='border border-gray-700/50 rounded-xl p-6 backdrop-blur-sm bg-gray-900/20'
+      className='border border-border rounded-lg p-6 bg-background/75 hover:bg-background/85 backdrop-blur-sm transition-all duration-300'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -112,45 +131,91 @@ export default function Eras() {
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center space-x-3'>
           <SwitchCamera className='w-5 h-5 text-white' />
-          <span className='text-white font-medium text-lg'>Niche stats</span>
+          <span className='text-white font-medium text-lg'>Niches/Eras</span>
         </div>
         <div className='bg-gray-800/60 px-3 py-1 rounded-full'>
           <span className='text-gray-300 text-sm font-medium'>Last 20 years</span>
         </div>
       </div>
 
-      <div className='flex md:flex-row flex-col md:items-start items-center md:text-start text-center gap-6'>
-        {/* Image Section */}
-        <div className='flex-shrink-0 md:w-48 w-full h-auto md:h-32 bg-gray-800/50 rounded-lg overflow-hidden'>
-          {currentEra.image_url.includes('placeholder') ? (
-            <div className='w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center'>
-              <span className='text-gray-400 text-sm'>Image Placeholder</span>
-            </div>
-          ) : (
-            <img
-              src={currentEra.image_url}
-              alt={currentEra.title}
-              className='w-full h-full object-cover cursor-pointer transition-transform hover:scale-105'
-              onClick={openImagePopup}
-            />
-          )}
-        </div>
-
-        {/* Content Section */}
-        <div className='flex-1 space-y-4'>
-          <div>
-            <h3 className='text-white font-semibold text-xl mb-2'>{currentEra.title}</h3>
+      <AnimatePresence mode='wait' custom={direction}>
+        <motion.div
+          key={currentEra.id}
+          custom={direction}
+          className='flex md:flex-row flex-col md:items-start items-center md:text-start text-center gap-6'
+          initial='enter'
+          animate='center'
+          exit='exit'
+          variants={{
+            enter: (direction: number) => ({
+              opacity: 0,
+              x: direction > 0 ? 20 : -20,
+            }),
+            center: {
+              opacity: 1,
+              x: 0,
+            },
+            exit: (direction: number) => ({
+              opacity: 0,
+              x: direction > 0 ? -20 : 20,
+            }),
+          }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+        >
+          {/* Image Section */}
+          <div className='flex-shrink-0 md:w-48 w-full h-auto md:h-32 bg-gray-800/50 rounded-lg overflow-hidden'>
+            {currentEra.image_url.includes('placeholder') ? (
+              <div className='w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center'>
+                <span className='text-gray-400 text-sm'>Image Placeholder</span>
+              </div>
+            ) : (
+              <img
+                src={currentEra.image_url}
+                alt={currentEra.title}
+                className='w-full h-full object-cover cursor-pointer transition-transform hover:scale-105'
+                onClick={openImagePopup}
+              />
+            )}
           </div>
-          <ul className='space-y-2'>
-            {currentEra.bullets.map((bullet, index) => (
-              <li key={index} className='flex items-start text-gray-300 text-sm'>
-                <div className='w-1.5 h-1.5 bg-green-400 rounded-full mr-3 flex-shrink-0 mt-1.5'></div>
-                <span className='text-start'>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+
+          {/* Content Section */}
+          <div className='flex-1 space-y-4'>
+            {currentEra.id === 'kendama' ? (
+              <div>
+                <h3 className='text-white font-semibold text-xl mb-2'>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a
+                        className='underline decoration-1 decoration-gray-900/20 underline-offset-2 hover:text-gray-200/95 hover:decoration-gray-500 transition-all'
+                        href='https://kendamausa.com/what-is-kendama/'
+                        target='_blank'
+                      >
+                        Kendama
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent side='top' align='start'>
+                      <p>What is kendama?</p>
+                    </TooltipContent>
+                  </Tooltip>{' '}
+                  Prodigy Era
+                </h3>
+              </div>
+            ) : (
+              <div>
+                <h3 className='text-white font-semibold text-xl mb-2'>{currentEra.title}</h3>
+              </div>
+            )}
+            <ul className='space-y-2'>
+              {currentEra.bullets.map((bullet, index) => (
+                <li key={index} className='flex items-start text-gray-300 text-sm'>
+                  <div className='w-1.5 h-1.5 bg-green-400 rounded-full mr-3 flex-shrink-0 mt-1.5'></div>
+                  <span className='text-start'>{bullet}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Navigation */}
       <div className='flex items-center justify-between mt-6'>
@@ -166,7 +231,10 @@ export default function Eras() {
           {eras.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => {
+                setDirection(index > currentIndex ? 1 : -1);
+                setCurrentIndex(index);
+              }}
               className={`w-2 h-2 rounded-full transition-colors ${
                 index === currentIndex ? 'bg-green-400' : 'bg-gray-600'
               }`}
@@ -225,12 +293,8 @@ export default function Eras() {
               <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-lg'>
                 {currentEra.img_caption ? (
                   <div>
-                      <p className='text-white text-xs'>
-                      {currentEra.img_caption[0]}
-                    </p>
-                      <p className='text-white text-xs'>
-                      {currentEra.img_caption[1]}
-                    </p>
+                    <p className='text-white text-xs'>{currentEra.img_caption[0]}</p>
+                    <p className='text-white text-xs'>{currentEra.img_caption[1]}</p>
                   </div>
                 ) : (
                   <div>

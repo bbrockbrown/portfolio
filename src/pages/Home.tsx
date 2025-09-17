@@ -3,6 +3,7 @@ import P5Sketch from '@/components/sketches/P5Sketch';
 import { RotateCcw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import Silly from '@/components/composite/Silly';
+import { Link } from 'react-router';
 
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
@@ -59,7 +60,11 @@ export default function Home() {
               grow through new opportunities.
             </p>
             <p className='text-sm sm:text-sm md:text-base mt-1 md:mt-2 lg:text-lg mb-2 md:mb-3 leading-relaxed'>
-              Check out some of the things I have built below!
+              Check out some of the things I have built{' '}
+              <Link to='/projects' className='font-bold underline underline-offset-2 decoration-transparent hover:decoration-white ease-in transition-all'>
+                here
+              </Link>
+              !
             </p>
             <p className='text-xs sm:text-xs md:text-xs mt-1 opacity-80'>
               If you want to see this background do its magic again, click the refresh button at the

@@ -1,6 +1,7 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { KeystrokeProvider } from '@/components/keystroke-provider';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
 import Projects from '@/pages/Projects';
@@ -11,15 +12,17 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
-        <div className="relative">
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='about' element={<About />} />
-            <Route path='projects' element={<Projects />} />
-            <Route path='stats' element={<Stats />} />
-          </Routes>
-          <NavMenu />
-        </div>
+        <KeystrokeProvider>
+          <div className="relative">
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='about' element={<About />} />
+              <Route path='projects' element={<Projects />} />
+              <Route path='stats' element={<Stats />} />
+            </Routes>
+            <NavMenu />
+          </div>
+        </KeystrokeProvider>
       </ThemeProvider>
     </BrowserRouter>
   );

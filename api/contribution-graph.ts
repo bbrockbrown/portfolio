@@ -26,10 +26,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    // Get last 6 months of contributions (will display as 7 rows)
+    // Get exactly 25 weeks (175 days) for a clean rectangle
     const to = new Date();
     const from = new Date();
-    from.setMonth(from.getMonth() - 6);
+    from.setDate(from.getDate() - (25 * 7));
 
     const body = {
       query,

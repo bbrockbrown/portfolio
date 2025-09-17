@@ -6,57 +6,26 @@ import {
   type GitHubApiResponse,
 } from '@/types';
 import { useEffect, useState } from 'react';
+import { useKeystroke } from '@/components/keystroke-provider';
 import SectionHeader from '@/components/base/SectionHeader';
 import StatsCard from '@/components/composite/StatsCard';
 import SpotifyTrack from '@/components/composite/SpotifyTrack';
 import SpotifyArtist from '@/components/composite/SpotifyArtist';
 import ExpandableList from '@/components/composite/ExpandableList';
-import Footer from '@/components/layout/Footer';
 import GitHubActivity from '@/components/composite/GitHubActivity';
 import { getContributionData } from '@/lib/github';
 import Eras from '@/components/composite/Eras';
 
-interface DailyLog {
-  count: number;
-  date: string;
-}
-
-interface KeyData {
-  last_updated: string;
-  recent_activity: DailyLog[];
-  today_keystrokes: number;
-  total_keystrokes: number;
-}
-
 export default function Stats() {
-  const [keyData, setKeyData] = useState<KeyData | null>(null);
+  const { keyData, isLoading: keystrokeLoading, error: keystrokeError } = useKeystroke();
   const [topTracks, setTopTracks] = useState<SpotifyTopTracksResponse | null>(null);
   const [topArtists, setTopArtists] = useState<SpotifyTopArtistsResponse | null>(null);
   const [recentTracks, setRecentTracks] = useState<SpotifyRecentlyPlayedResponse | null>(null);
   const [contributionData, setContributionData] = useState<GitHubApiResponse | null>(null);
 
-  // on mount, get all stats data
+  // on mount, get all stats data (except keystroke which is handled by provider)
   useEffect(() => {
     const fetchAllData = async () => {
-      // Fetch keystroke data
-      const fetchKeyData = async (retryCount: number): Promise<void> => {
-        try {
-          const response = await fetch(
-            `${import.meta.env.VITE_KEYSTROKE_API_URL}/api/portfolio-stats`
-          );
-          const data: KeyData = await response.json();
-          if (data.recent_activity.length === 0 && retryCount < 20) {
-            // sometimes need to wake up service
-            console.log('retrying key data; current try', retryCount)
-            await fetchKeyData(retryCount + 1);
-          } else {
-            setKeyData(data);
-          }
-        } catch (error: any) {
-          console.error('Failed to fetch key data:', error);
-        }
-      };
-
       // Fetch top tracks
       const fetchTopTracks = async () => {
         try {
@@ -97,9 +66,8 @@ export default function Stats() {
         }
       };
 
-      // Run both fetches concurrently
+      // Run all fetches concurrently (keystroke data is handled by provider)
       await Promise.all([
-        fetchKeyData(0),
         fetchTopTracks(),
         fetchRecentTracks(),
         fetchTopArtists(),
@@ -110,25 +78,51 @@ export default function Stats() {
     fetchAllData();
   }, []);
 
-  console.log('keyData', keyData);
-  console.log('github', contributionData);
-
-  topArtists?.items.forEach((item: SpotifyApi.ArtistObjectFull) => {
-    console.log(item);
-  });
-
   return (
     <>
       <section className='min-h-screen bg-background px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 lg:py-20 relative z-10'>
-        <div className='max-w-7xl mx-auto'>
-          <SectionHeader
-            title='Stats'
-            subtitle="A peek into my personal and digital life!"
-          />
+        <div className='max-w-7xl mx-auto md:mb-10 mb-20'>
+          <SectionHeader title='Stats' subtitle='A peek into my personal and digital life!' />
 
           {/* GitHub Activity - Full Width */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
-            <GitHubActivity data={contributionData} />
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8'>
+            {contributionData ? (
+              <GitHubActivity data={contributionData} />
+            ) : (
+              <div className='flex flex-col justify-between backdrop-blur-sm bg-background/75 border border-border rounded-lg p-4 sm:p-6 hover:bg-background/85 transition-all duration-300'>
+                <div>
+                  <div className='flex items-center justify-between mb-4 sm:mb-6'>
+                    <div className='flex items-center space-x-2 sm:space-x-3'>
+                      <div className='w-4 h-4 sm:w-5 sm:h-5 bg-gray-700 rounded animate-pulse' />
+                      <span className='text-white font-medium text-base sm:text-lg'>GitHub</span>
+                    </div>
+                    <div className='bg-gray-800/60 px-2 py-1 sm:px-3 rounded-full'>
+                      <span className='text-gray-300 text-xs sm:text-sm font-medium'>Last 25 weeks</span>
+                    </div>
+                  </div>
+
+                  {/* Loading skeleton for contribution graph */}
+                  <div className='justify-self-center space-y-0.5 sm:space-y-1 mb-4 sm:mb-6 overflow-x-auto'>
+                    <div className='min-w-fit'>
+                      {Array.from({ length: 7 }).map((_, dayIndex) => (
+                        <div key={dayIndex} className='flex space-x-0.5 sm:space-x-1'>
+                          {Array.from({ length: 25 }).map((_, weekIndex) => (
+                            <div key={weekIndex} className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-gray-800/50 rounded-sm animate-pulse' />
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Loading skeleton for date range */}
+                <div className='flex justify-between items-center text-gray-400 text-xs sm:text-sm'>
+                  <div className='hidden sm:block w-20 h-4 bg-gray-700 rounded animate-pulse' />
+                  <span className='text-muted-foreground'>Fetching GitHub activity...</span>
+                  <div className='w-20 h-4 bg-gray-700 rounded animate-pulse' />
+                </div>
+              </div>
+            )}
             <Eras />
           </div>
 
@@ -151,7 +145,11 @@ export default function Stats() {
 
             {/* Keystroke Stats */}
             <StatsCard title='Coding Activity' delay={0.2}>
-              {keyData ? (
+              {keystrokeError ? (
+                <div className='flex items-center justify-center p-8 text-red-400'>
+                  <span className='text-sm'>Failed to load keyboard data</span>
+                </div>
+              ) : keyData ? (
                 <div className='space-y-4'>
                   <div className='text-center'>
                     <div className='text-3xl font-bold text-primary'>
@@ -170,7 +168,9 @@ export default function Stats() {
                 </div>
               ) : (
                 <div className='flex items-center justify-center p-8 text-muted-foreground'>
-                  <span className='text-sm'>Fetching keyboard data...</span>
+                  <span className='text-sm'>
+                    {keystrokeLoading ? 'Waking up database...' : 'Fetching keyboard data...'}
+                  </span>
                 </div>
               )}
             </StatsCard>
@@ -207,7 +207,6 @@ export default function Stats() {
           </div>
         </div>
       </section>
-      <Footer />
     </>
   );
 }

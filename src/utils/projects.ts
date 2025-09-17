@@ -1,5 +1,7 @@
-// import mp_snapshot from '@/assets/mp_snapshot.png';
-// import highline_snapshot from '@/assets/highline_snapshot.png';
+import mp_snapshot from '@/assets/mp_snapshot.png';
+import highline_snapshot from '@/assets/highline_snapshot.png';
+import ita_snapshot from '@/assets/ita_snapshot.png';
+import stats_snapshot from '@/assets/stats_snapshot.png';
 
 export interface Project {
   id: string;
@@ -17,7 +19,7 @@ export const projects: Project[] = [
     title: 'The Money Personality',
     description:
       'Full-stack web application that provides a comprehensive money personality assessment platform that provides users with detailed personality-based financial insights through an interactive quiz system, complete with PDF report generation and advisor/client management capabilities.',
-    image: null,
+    image: mp_snapshot,
     liveUrl: 'https://www.themoneypersonality.com/',
     technologies: ['react', 'typescript', 'python', 'flask', 'supabase', 'stripe'],
   },
@@ -37,7 +39,7 @@ export const projects: Project[] = [
     title: 'Highline Alts',
     description:
       'Full-stack web application enabling accredited investors to discover and express interest in private equity, venture capital, and real estate deals, with comprehensive admin tools for deal management and investor onboarding.',
-    image: null,
+    image: highline_snapshot,
     liveUrl: 'https://highline-frontend.vercel.app/',
     technologies: ['react', 'typescript', 'express', 'node', 'supabase', 'resend', 'tailwind'],
   },
@@ -52,7 +54,7 @@ export const projects: Project[] = [
     title: 'Inventory Management System',
     description:
       'Full-stack web application that provides a comprehensive inventory management system for the Institute for Therapy through the Arts (ITA), enabling therapists to submit order requests for therapeutic materials and administrators to review, approve, and track these orders with budget management capabilities and automated email notifications.',
-    image: null,
+    image: ita_snapshot,
     technologies: ['react', 'javascript', 'node', 'postgresql', 'supabase', 'styled components', 'AG Grid'],
   },
   // Project Overview
@@ -85,7 +87,7 @@ export const projects: Project[] = [
     title: '!stats.fm',
     description:
       'Full-stack web application that provides a comprehensive Spotify music data visualization platform, allowing users to explore songs, artists, and albums through interactive radar-like graphs and user-friendly interfaces, complete with user authentication, admin dashboard, and bug reporting system.',
-    image: null,
+    image: stats_snapshot,
     liveUrl: 'https://bbrockbrown2.pythonanywhere.com/',
     githubUrl: 'https://github.com/bbrockbrown/spotify_visualization_dataV2',
     technologies: ['javascript', 'bootstrap', 'python', 'flask', 'sqlite', 'spotify web api'],

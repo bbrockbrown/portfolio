@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { House, FolderClosed, PersonStanding, ChartColumn, type LucideIcon } from 'lucide-react';
+import { House, FolderClosed, PersonStanding, ChartColumn, Handshake, type LucideIcon } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -34,6 +34,11 @@ const items: NavItem[] = [
     to: '/stats',
     icon: ChartColumn,
   },
+  {
+    id: 'Connect',
+    to:'/about#connect',
+    icon: Handshake,
+  }
 ];
 
 export default function NavMenu({ className }: NavMenuProps) {
@@ -54,6 +59,7 @@ export default function NavMenu({ className }: NavMenuProps) {
 
   return (
     <div
+      id='nav-menu'
       className={`fixed flex flex-row gap-1 left-1/2 bottom-8 -translate-x-1/2 border backdrop-blur-lg z-50 rounded-md px-3 py-2 ${className}
                   ${isHomePage ? 'transition-all duration-1000 ease-out' : ''}
                   ${

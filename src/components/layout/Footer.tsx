@@ -25,9 +25,9 @@ export default function Footer() {
   return (
     <footer className='relative flex flex-row justify-center bg-background md:w-[60%] w-[75%] justify-self-center border-t border-gray-800 py-8 px-4 sm:px-6 md:px-8'>
       <div className='max-w-7xl w-full'>
-        <div className='flex flex-row justify-center items-start space-y-4'>
+        <div className='flex flex-row justify-start items-start space-y-4'>
           {/* Social Links */}
-          <div className='flex space-x-6'>
+          <div id='connect' className='flex space-x-6'>
             <a
               href='https://github.com/bbrockbrown'
               target='_blank'
