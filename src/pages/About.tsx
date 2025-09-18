@@ -8,6 +8,7 @@ export default function About() {
   const location = useLocation();
   const [emailCopied, setEmailCopied] = useState(false);
   const [imagePopupOpen, setImagePopupOpen] = useState(false);
+  const [animation, setAnimation] = useState(false);
   const email = 'brockbrown46@gmail.com';
 
   // On mount, check if they clicked the handshake and scroll to connect section
@@ -21,6 +22,7 @@ export default function About() {
             behavior: 'smooth',
             block: 'center',
           });
+          setAnimation(true);
         }
       }, 100);
     }
@@ -75,7 +77,9 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
         >
-          <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center'>About Me</h1>
+          <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center'>
+            About Me
+          </h1>
         </motion.div>
 
         {/* Content with floating image */}
@@ -107,12 +111,13 @@ export default function About() {
             {/* Paragraph 1 - Journey into CS */}
             <div className='space-y-3 md:space-y-4'>
               <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
-                I'm a junior at Northwestern University studying computer science, though my journey
-                into tech wasn't traditional. Coming into college, I had very little programming
-                experience—just curiosity and a willingness to learn. What transformed my path were
-                the incredible people I met through campus organizations and coding clubs. Their
-                mentorship and collaborative spirit not only taught me the fundamentals but showed
-                me how welcoming and dynamic the tech community could be.
+                As you may have already read, I am a junior studying CS @ Northwestern University in
+                full-stack development. Coming into college, I had very little programming
+                experience—I just knew certain commands in sequence could do cool things. What
+                transformed my path were the incredible people I met through campus opportunities
+                and coding clubs (DISC 🫶). Their mentorship and collaborative spirit not only taught
+                me the fundamentals but showed me how welcoming and dynamic the tech community could
+                be.
               </p>
             </div>
 
@@ -123,7 +128,8 @@ export default function About() {
                 and problem-solving. Whether I'm building interactive web experiences, crafting data
                 visualizations, or working on full-stack applications, I'm constantly amazed by how
                 code can bring ideas to life. I'm particularly drawn to projects that combine
-                technical complexity with meaningful user impact.
+                technical complexity with meaningful user impact (and projects that are silly and
+                have no actual true purpose).
               </p>
             </div>
 
@@ -131,11 +137,10 @@ export default function About() {
             <div className='space-y-3 md:space-y-4'>
               <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
                 Outside of coding, I'm passionate about staying active and exploring new challenges.
-                You'll often find me at the gym, training for endurance events, or experimenting
-                with new recipes in the kitchen—baking has become my favorite creative outlet. I'm
-                also an avid music listener and gamer, always eager to discover new artists or dive
-                into immersive game worlds. These diverse interests keep me balanced and often
-                inspire unexpected solutions to technical problems.
+                I looooove going to the gym, training for endurance events, and experimenting with
+                new recipes in the kitchen (you will find baking is my favorite 'creative' outlet).
+                I'm also an avid music listener and gamer, always eager to discover new artists or
+                dive into immersive game worlds.
               </p>
             </div>
 
@@ -152,12 +157,17 @@ export default function About() {
             {/* Social Links Section */}
             <motion.div
               id='connect'
-              className={`pt-4 md:pt-5 border-t border-gray-800 clear-both mb-16 md:mb-7 relative`}
+              className={`flex flex-row justify-center items-center pt-4 md:pt-5 border-t border-gray-800 clear-both mb-16 md:mb-7 relative`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div className='flex items-center justify-center space-x-4 sm:space-x-6'>
+              <div
+                id='animator'
+                className={`${
+                  animation && 'circle-animation'
+                } overflow-hidden relative flex items-center justify-center w-min space-x-4 sm:space-x-6`}
+              >
                 <a
                   href='https://github.com/bbrockbrown'
                   target='_blank'
