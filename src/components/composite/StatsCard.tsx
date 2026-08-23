@@ -1,6 +1,6 @@
-import { motion } from 'motion/react';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { motion } from 'motion/react';
 
 interface StatsCardProps {
   title: string;

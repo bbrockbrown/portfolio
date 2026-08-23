@@ -1,12 +1,15 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import './App.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import { KeystrokeProvider } from '@/components/keystroke-provider';
-import Home from '@/pages/Home';
+import { ThemeProvider } from '@/components/theme-provider';
 import About from '@/pages/About';
+import Home from '@/pages/Home';
 import Projects from '@/pages/Projects';
 import Stats from '@/pages/Stats';
+
 import NavMenu from './components/layout/NavMenu';
+
+import './App.css';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
-import { projects } from '@/utils/projects';
-import ProjectCard from '@/components/composite/ProjectCard';
 import SectionHeader from '@/components/base/SectionHeader';
+import ProjectCard from '@/components/composite/ProjectCard';
+import { projects } from '@/utils/projects';
 
 export default function Projects() {
   return (

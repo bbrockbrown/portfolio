@@ -1,7 +1,7 @@
 'use client';
 
-import { useAnimationFrame } from 'motion/react';
 import { useRef } from 'react';
+import { useAnimationFrame } from 'motion/react';
 
 export default function UseAnimationFrame() {
   const ref = useRef<HTMLDivElement>(null);

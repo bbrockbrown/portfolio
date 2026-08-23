@@ -1,6 +1,7 @@
-import { Github, Linkedin, Instagram, Mail, Check, ChevronUp } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useState } from 'react';
+import { Check, ChevronUp, Github, Instagram, Linkedin, Mail } from 'lucide-react';
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function Footer() {
   const [emailCopied, setEmailCopied] = useState(false);

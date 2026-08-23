@@ -1,5 +1,7 @@
 import { ExternalLink, Github } from 'lucide-react';
+
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 import TechBadge from './TechBadge';
 
 interface ProjectCardProps {

@@ -1,11 +1,12 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { SwitchCamera, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, SwitchCamera, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
+import baking from '@/assets/baking.webp';
+import endurance from '@/assets/endurance.webp';
+import kendama from '@/assets/kendama.webp'
+import music from '@/assets/music.webp';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import endurance from '@/assets/endurance.jpg';
-import baking from '@/assets/baking.jpg';
-import music from '@/assets/music.png';
-import kendama from '@/assets/kendama.jpeg'
 
 interface Era {
   id: string;
@@ -81,13 +82,15 @@ export default function Eras() {
   ];
 
   useEffect(() => {
-    window.addEventListener('keydown', (e: KeyboardEvent) => {
-      const key = e.key;
-      if (key === 'Escape') closeImagePopup();
-    });
+    if (!imagePopupOpen) return;
 
-    return () => window.removeEventListener('keydown', closeImagePopup);
-  });
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeImagePopup();
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [imagePopupOpen]);
 
   const nextEra = () => {
     setDirection(1);

@@ -1,8 +1,9 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { Github, Linkedin, Instagram, Mail, Check, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import me from '@/assets/me.jpeg';
+import { Check, Github, Instagram, Linkedin, Mail, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
+import me from '@/assets/me.webp';
 
 export default function About() {
   const location = useLocation();

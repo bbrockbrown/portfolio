@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import P5Sketch from '@/components/sketches/P5Sketch';
-import { RotateCcw } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import Silly from '@/components/composite/Silly';
 import { Link } from 'react-router';
+import { RotateCcw } from 'lucide-react';
+
+import Silly from '@/components/composite/Silly';
+import P5Sketch from '@/components/sketches/P5Sketch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function Home() {
   const [showContent, setShowContent] = useState(false);

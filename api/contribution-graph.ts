@@ -54,6 +54,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const data = await response.json();
+
+    // GitHub's GraphQL API returns HTTP 200 with an `errors` array for bad or
+    // expired tokens and malformed queries, so response.ok is not enough.
+    if (data.errors?.length) {
+      throw new Error(`GitHub GraphQL error: ${JSON.stringify(data.errors)}`);
+    }
+
+    if (!data.data?.user?.contributionsCollection?.contributionCalendar) {
+      throw new Error('GitHub response missing contribution calendar');
+    }
+
     return res.status(200).json(data);
   } catch (err: any) {
     console.error('Github API error:', err);
