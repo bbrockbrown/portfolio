@@ -1,7 +1,7 @@
-import mp_snapshot from '@/assets/mp_snapshot.png';
-import highline_snapshot from '@/assets/highline_snapshot.png';
-import ita_snapshot from '@/assets/ita_snapshot.png';
-import stats_snapshot from '@/assets/stats_snapshot.png';
+import highline_snapshot from '@/assets/highline_snapshot.webp';
+import ita_snapshot from '@/assets/ita_snapshot.webp';
+import mp_snapshot from '@/assets/mp_snapshot.webp';
+import stats_snapshot from '@/assets/stats_snapshot.webp';
 
 export interface Project {
   id: string;

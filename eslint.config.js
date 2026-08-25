@@ -15,7 +15,9 @@ export default tseslint.config(
   reactHooks.configs['recommended-latest'],
   reactRefresh.configs.vite,
   {
-    files: ['**/*.{ts,tsx}'],
+    // Covers .js/.jsx too, otherwise plain-JS files (e.g. sketches/perlin.js)
+    // get neither the browser globals nor the unused-vars policy below.
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -26,6 +28,11 @@ export default tseslint.config(
       'unused-imports': unusedImports,
     },
     rules: {
+      // Provider-plus-hook in one file is a deliberate pattern here (theme,
+      // keystroke) and shadcn's button exports its variants. Keep the HMR
+      // signal without failing the lint run.
+      'react-refresh/only-export-components': 'warn',
+
       // Prefer plugin to remove unused imports/vars automatically
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',

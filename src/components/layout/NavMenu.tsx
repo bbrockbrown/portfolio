@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { House, FolderClosed, PersonStanding, ChartColumn, Handshake, type LucideIcon } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { ChartColumn, FolderClosed, Handshake, House, type LucideIcon, PersonStanding } from 'lucide-react';
+
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface NavMenuProps {

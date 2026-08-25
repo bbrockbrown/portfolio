@@ -1,7 +1,7 @@
 import type {
-  SpotifyTopTracksResponse,
   SpotifyRecentlyPlayedResponse,
   SpotifyTopArtistsResponse,
+  SpotifyTopTracksResponse,
 } from '@/types';
 
 export const getTopTracks = async (): Promise<SpotifyTopTracksResponse | null> => {

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, type ReactNode, useContext, useEffect, useState } from 'react';
 
 interface DailyLog {
   count: number;
@@ -20,6 +20,11 @@ interface KeystrokeContextType {
 
 const KeystrokeContext = createContext<KeystrokeContextType | undefined>(undefined);
 
+const API_URL = import.meta.env.VITE_KEYSTROKE_API_URL;
+// The keystroke DB sleeps when idle, so an empty payload means "still waking".
+const MAX_WAKE_RETRIES = 20;
+const MAX_ERROR_RETRIES = 5;
+
 interface KeystrokeProviderProps {
   children: ReactNode;
 }
@@ -30,53 +35,69 @@ export function KeystrokeProvider({ children }: KeystrokeProviderProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Tracks pending retry timers and post-unmount state so a slow retry chain
+    // can't outlive the provider.
+    let cancelled = false;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const scheduleRetry = (retryCount: number, delayMs: number) => {
+      retryTimer = setTimeout(() => fetchKeyData(retryCount), delayMs);
+    };
+
     const fetchKeyData = async (retryCount: number): Promise<void> => {
+      if (cancelled) return;
+
       try {
-        // console.log(`Fetching keystroke data (attempt ${retryCount + 1})...`);
-        const response = await fetch(
-          `${import.meta.env.VITE_KEYSTROKE_API_URL}/api/portfolio-stats`
-        );
+        const response = await fetch(`${API_URL}/api/portfolio-stats`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data: KeyData = await response.json();
+        if (cancelled) return;
 
-        if (data.recent_activity.length === 0 && retryCount < 20) {
+        if (!data.recent_activity?.length && retryCount < MAX_WAKE_RETRIES) {
           // Database is still waking up, retry
-          // console.log('Database still waking up, retrying in 2 seconds...');
-          setTimeout(() => fetchKeyData(retryCount + 1), 2000);
-        } else {
-          // console.log('Keystroke data fetched successfully');
-          setKeyData(data);
-          setIsLoading(false);
-          setError(null);
+          scheduleRetry(retryCount + 1, 2000);
+          return;
         }
-      } catch (error: any) {
-        // console.error('Failed to fetch keystroke data:', error);
-        if (retryCount < 5) {
-          // Retry on error up to 5 times
-          setTimeout(() => fetchKeyData(retryCount + 1), 3000);
-        } else {
-          // Use dummy data after all retries failed
-          const dummyData: KeyData = {
-            last_updated: new Date().toISOString(),
-            recent_activity: [
-              { count: Math.floor(Math.random() * (7000 - 5000 + 1)) + 5000, date: new Date().toISOString().split('T')[0] }
-            ],
-            today_keystrokes: Math.floor(Math.random() * (7000 - 5000 + 1)) + 5000,
-            total_keystrokes: 1160186
-          };
-          setKeyData(dummyData);
-          setIsLoading(false);
-          setError(null);
+
+        setKeyData(data);
+        setIsLoading(false);
+        setError(null);
+      } catch (err) {
+        if (cancelled) return;
+
+        if (retryCount < MAX_ERROR_RETRIES) {
+          scheduleRetry(retryCount + 1, 3000);
+          return;
         }
+
+        // Out of retries. Surface the failure rather than inventing numbers --
+        // these are presented to visitors as real stats.
+        console.error('Failed to fetch keystroke data:', err);
+        setKeyData(null);
+        setIsLoading(false);
+        setError(err instanceof Error ? err.message : 'Unknown error');
       }
     };
 
     // Start fetching immediately when provider mounts
+    if (!API_URL) {
+      // Without this the fetch would go to the literal string "undefined/api/..."
+      console.error('VITE_KEYSTROKE_API_URL is not set; skipping keystroke fetch');
+      setIsLoading(false);
+      setError('Keystroke API is not configured');
+      return;
+    }
+
     fetchKeyData(0);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(retryTimer);
+    };
   }, []);
 
   return (

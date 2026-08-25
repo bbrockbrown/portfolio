@@ -1,20 +1,21 @@
-import { getTopTracks, getRecentTracks, getTopArtists } from '@/lib/spotify';
-import {
-  type SpotifyTopArtistsResponse,
-  type SpotifyRecentlyPlayedResponse,
-  type SpotifyTopTracksResponse,
-  type GitHubApiResponse,
-} from '@/types';
 import { useEffect, useState } from 'react';
-import { useKeystroke } from '@/components/keystroke-provider';
+
 import SectionHeader from '@/components/base/SectionHeader';
-import StatsCard from '@/components/composite/StatsCard';
-import SpotifyTrack from '@/components/composite/SpotifyTrack';
-import SpotifyArtist from '@/components/composite/SpotifyArtist';
+import Eras from '@/components/composite/Eras';
 import ExpandableList from '@/components/composite/ExpandableList';
 import GitHubActivity from '@/components/composite/GitHubActivity';
+import SpotifyArtist from '@/components/composite/SpotifyArtist';
+import SpotifyTrack from '@/components/composite/SpotifyTrack';
+import StatsCard from '@/components/composite/StatsCard';
+import { useKeystroke } from '@/components/keystroke-provider';
 import { getContributionData } from '@/lib/github';
-import Eras from '@/components/composite/Eras';
+import { getRecentTracks, getTopArtists, getTopTracks } from '@/lib/spotify';
+import {
+  type GitHubApiResponse,
+  type SpotifyRecentlyPlayedResponse,
+  type SpotifyTopArtistsResponse,
+  type SpotifyTopTracksResponse,
+} from '@/types';
 
 export default function Stats() {
   const { keyData, isLoading: keystrokeLoading, error: keystrokeError } = useKeystroke();
@@ -153,7 +154,7 @@ export default function Stats() {
                 <div className='space-y-4'>
                   <div className='text-center'>
                     <div className='text-3xl font-bold text-primary'>
-                      {keyData.total_keystrokes.toLocaleString()}
+                      {(keyData.total_keystrokes ?? 0).toLocaleString()}
                     </div>
                     <div className='text-sm text-muted-foreground'>
                       Total Keystrokes <span className='text-xs'>(since March 2025)</span>
@@ -161,7 +162,11 @@ export default function Stats() {
                   </div>
                   <div className='text-center'>
                     <div className='text-xl font-semibold text-foreground'>
-                      {keyData.recent_activity[0].count}
+                      {(
+                        keyData.recent_activity?.[0]?.count ??
+                        keyData.today_keystrokes ??
+                        0
+                      ).toLocaleString()}
                     </div>
                     <div className='text-xs text-muted-foreground'>Today</div>
                   </div>

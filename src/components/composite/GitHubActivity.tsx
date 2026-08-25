@@ -1,5 +1,6 @@
-import { motion } from 'motion/react';
 import { Github } from 'lucide-react';
+import { motion } from 'motion/react';
+
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { GitHubApiResponse } from '@/types';
 

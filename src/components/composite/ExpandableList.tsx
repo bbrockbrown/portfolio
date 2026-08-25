@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 
 interface ExpandableListProps {
   children: React.ReactNode[];
