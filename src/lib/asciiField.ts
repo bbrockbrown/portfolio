@@ -21,8 +21,8 @@ export const defaultOptions: AsciiFieldOptions = {
   lineHeight: 1.15,
   fontFamily: '"Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
   ramp: ' .:/|cba%#',
-  minAlpha: 0.03,
-  maxAlpha: 0.16,
+  minAlpha: 0.1,
+  maxAlpha: 0.5,
   xFreq: 0.022,
   yFreq: 0.085,
   timeScale: 0.00018,
@@ -36,7 +36,7 @@ const ALPHA_BUCKETS = 16;
 
 export function createAsciiField(
   canvas: HTMLCanvasElement,
-  overrides: Partial<AsciiFieldOptions> = {},
+  overrides: Partial<AsciiFieldOptions> = {}
 ) {
   const o: AsciiFieldOptions = { ...defaultOptions, ...overrides };
   const ctx = canvas.getContext('2d')!;
@@ -61,8 +61,7 @@ export function createAsciiField(
   let alphaLUT: string[] = [];
   const rebuildLUT = () => {
     alphaLUT = Array.from({ length: ALPHA_BUCKETS }, (_, i) => {
-      const alpha =
-        (o.minAlpha + (o.maxAlpha - o.minAlpha) * (i / (ALPHA_BUCKETS - 1))) * color.a;
+      const alpha = (o.minAlpha + (o.maxAlpha - o.minAlpha) * (i / (ALPHA_BUCKETS - 1))) * color.a;
       return `rgba(${color.r},${color.g},${color.b},${alpha.toFixed(4)})`;
     });
   };

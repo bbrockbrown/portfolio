@@ -107,6 +107,31 @@ html.light {
   height: 100dvh; /* Dynamic viewport height */
 }
 
+/* Patch-browser row layout. Mobile: two lines (num+sig+name / meta row).
+   Desktop: one 7-column line, with .patch-meta collapsing into the grid via
+   display:contents so its children occupy their own columns. */
+.patch-grid {
+  display: grid;
+  grid-template-columns: 2.5rem auto minmax(0, 1fr);
+  grid-template-areas:
+    'num sig name'
+    'meta meta meta';
+}
+.patch-meta {
+  grid-area: meta;
+  display: flex;
+  flex-wrap: wrap;
+}
+@media (min-width: 768px) {
+  .patch-grid {
+    grid-template-columns: 2.5rem 72px minmax(0, 1fr) 5.5rem minmax(0, 15rem) 3.5rem auto;
+    grid-template-areas: 'num sig name type tech year links';
+  }
+  .patch-meta {
+    display: contents;
+  }
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
