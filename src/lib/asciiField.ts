@@ -1,4 +1,5 @@
-import { createNoise3D } from 'simplex-noise';
+import { createSimplexField } from './fields/simplexField';
+import type { FieldFn } from './fields/types';
 
 export interface AsciiFieldOptions {
   fontSize: number; // CSS px
@@ -7,27 +8,20 @@ export interface AsciiFieldOptions {
   ramp: string; // sparse → dense; index 0 must be ' ' (skipped when drawing)
   minAlpha: number; // alpha of the faintest drawn glyph
   maxAlpha: number; // alpha at field maximum (dark theme; light theme wants less)
-  xFreq: number; // noise frequency per column — LOWER than yFreq ⇒ horizontal streaks
-  yFreq: number; // noise frequency per row
-  timeScale: number; // noise-time advance per ms (morph speed)
-  breatheSpeed: number; // rad/ms of the global density envelope (~0.00035 ⇒ ~18 s cycle)
-  breatheDepth: number; // 0..1 — how empty the "exhale" phase gets
   fpsCap: number; // draw rate cap; field time still tracks wall clock
   maxDpr: number; // cap devicePixelRatio (2 is plenty)
+  // The scalar field, 0..1 per cell. Owns its own spatial/temporal dynamics.
+  // Defaults to the legacy simplex field when omitted.
+  field?: FieldFn;
 }
 
-export const defaultOptions: AsciiFieldOptions = {
+export const defaultOptions: Omit<AsciiFieldOptions, 'field'> = {
   fontSize: 16,
   lineHeight: 1.15,
   fontFamily: '"Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
   ramp: ' .:/|cba%#',
-  minAlpha: 0.1,
-  maxAlpha: 0.5,
-  xFreq: 0.022,
-  yFreq: 0.085,
-  timeScale: 0.00018,
-  breatheSpeed: 0.00035,
-  breatheDepth: 0.6,
+  minAlpha: 0.03,
+  maxAlpha: 0.16,
   fpsCap: 60,
   maxDpr: 2,
 };
@@ -36,11 +30,11 @@ const ALPHA_BUCKETS = 16;
 
 export function createAsciiField(
   canvas: HTMLCanvasElement,
-  overrides: Partial<AsciiFieldOptions> = {}
+  overrides: Partial<AsciiFieldOptions> = {},
 ) {
   const o: AsciiFieldOptions = { ...defaultOptions, ...overrides };
   const ctx = canvas.getContext('2d')!;
-  const noise3d = createNoise3D();
+  const field: FieldFn = o.field ?? createSimplexField();
 
   let cssW = 0,
     cssH = 0,
@@ -61,7 +55,8 @@ export function createAsciiField(
   let alphaLUT: string[] = [];
   const rebuildLUT = () => {
     alphaLUT = Array.from({ length: ALPHA_BUCKETS }, (_, i) => {
-      const alpha = (o.minAlpha + (o.maxAlpha - o.minAlpha) * (i / (ALPHA_BUCKETS - 1))) * color.a;
+      const alpha =
+        (o.minAlpha + (o.maxAlpha - o.minAlpha) * (i / (ALPHA_BUCKETS - 1))) * color.a;
       return `rgba(${color.r},${color.g},${color.b},${alpha.toFixed(4)})`;
     });
   };
@@ -76,14 +71,10 @@ export function createAsciiField(
   const draw = () => {
     ctx.clearRect(0, 0, cssW, cssH);
     setFont();
-    const envelope = 1 - o.breatheDepth * (0.5 + 0.5 * Math.sin(t * o.breatheSpeed));
-    const nT = t * o.timeScale;
     for (let row = 0; row < rows; row++) {
       const y = row * cellH;
-      const nY = row * o.yFreq;
       for (let col = 0; col < cols; col++) {
-        let v = (noise3d(col * o.xFreq, nY, nT) + 1) / 2; // → 0..1
-        v *= envelope;
+        const v = field(col, row, t); // 0..1, dynamics + envelope owned by the field
         const idx = Math.min(o.ramp.length - 1, (v * o.ramp.length) | 0);
         if (idx === 0) continue; // ' ' — nothing to draw
         ctx.fillStyle = alphaLUT[Math.min(ALPHA_BUCKETS - 1, (v * ALPHA_BUCKETS) | 0)];

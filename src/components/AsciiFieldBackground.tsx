@@ -1,19 +1,24 @@
 import { useEffect, useRef } from 'react';
 
 import { type AsciiFieldOptions, createAsciiField } from '@/lib/asciiField';
+import { plasmaField } from '@/lib/fields/plasmaField';
+import { createSimplexField } from '@/lib/fields/simplexField';
 
 interface Props {
   options?: Partial<AsciiFieldOptions>; // mount-time only, by design
+  variant?: 'plasma' | 'simplex'; // which scalar field drives the glyphs; revert = one prop
   className?: string;
 }
 
-export function AsciiFieldBackground({ options, className }: Props) {
+export function AsciiFieldBackground({ options, variant = 'plasma', className }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const field = createAsciiField(canvas, options);
+    const fieldFn =
+      options?.field ?? (variant === 'simplex' ? createSimplexField() : plasmaField);
+    const field = createAsciiField(canvas, { ...options, field: fieldFn });
 
     // Theme color: the canvas element carries the token via CSS `color`,
     // so the engine just reads the computed value — and re-reads on theme flips.
