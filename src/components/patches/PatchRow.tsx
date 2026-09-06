@@ -3,8 +3,6 @@ import type { Project } from '@/lib/patches/types';
 
 import { WaveformSignature } from './WaveformSignature';
 
-const pad = (n: number) => String(n).padStart(3, '0');
-
 function Jack({ href, label }: { href: string; label: string }) {
   return (
     <a
@@ -18,72 +16,48 @@ function Jack({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function PatchRow({ project }: { project: Project }) {
-  const { patch, name, category, tech, year, links, init, sigSeed } = project;
-  const typeLabel = init ? 'INIT' : category;
+export function PatchRow({ project, index }: { project: Project; index: number }) {
+  const { name, category, tech, year, links, sigSeed } = project;
+  const num = String(index).padStart(2, '0');
 
   return (
     <li className='group border-b border-border'>
-      <div className='patch-grid items-center gap-x-4 gap-y-1 px-2 py-3 text-muted-foreground transition-colors group-hover:bg-accent/30'>
-        {/* patch number */}
-        <span
-          style={{ gridArea: 'num' }}
-          className='font-mono text-xs tabular-nums tracking-wider group-hover:text-foreground'
-        >
-          {pad(patch)}
+      <div className='flex items-start gap-4 px-3 py-4 transition-colors group-hover:bg-accent/30 sm:gap-5'>
+        {/* number */}
+        <span className='mt-1 w-6 shrink-0 font-mono text-xs tabular-nums tracking-wider text-muted-foreground group-hover:text-foreground'>
+          {num}
         </span>
 
         {/* waveform signature */}
-        <span style={{ gridArea: 'sig' }} className='block'>
-          <WaveformSignature
-            seed={sigSeed ?? name}
-            className='h-auto w-12 text-muted-foreground transition-colors group-hover:text-foreground md:w-[72px]'
-          />
-        </span>
+        <WaveformSignature
+          seed={sigSeed ?? name}
+          className='mt-0.5 h-6 w-16 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground'
+        />
 
-        {/* name */}
-        <span
-          style={{ gridArea: 'name' }}
-          className='truncate text-sm font-semibold text-foreground sm:text-base'
-        >
-          {name}
-        </span>
+        {/* name + tech */}
+        <div className='min-w-0 flex-1'>
+          <div className='flex items-baseline gap-3'>
+            <h3 className='truncate text-base font-semibold text-foreground sm:text-lg'>{name}</h3>
+            <span className='shrink-0 font-mono text-[0.7rem] tracking-widest text-muted-foreground'>
+              {category}
+            </span>
+          </div>
+          <p className='mt-1.5 font-mono text-[0.7rem] leading-relaxed tracking-wider text-muted-foreground'>
+            {tech.map((id, i) => (
+              <span key={id}>
+                {i > 0 && <span className='px-1.5 text-border'>·</span>}
+                {getTag(id)?.label ?? id}
+              </span>
+            ))}
+          </p>
+        </div>
 
-        {/* metadata group: display:contents on desktop (joins the grid), flex row on mobile */}
-        <div className='patch-meta items-center gap-x-4 gap-y-1'>
-          <span
-            style={{ gridArea: 'type' }}
-            className='font-mono text-[0.7rem] tracking-wider group-hover:text-foreground'
-          >
-            {typeLabel}
-          </span>
-
-          <span
-            style={{ gridArea: 'tech' }}
-            className='flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-[0.7rem] tracking-wider'
-          >
-            {tech.map((id, i) => {
-              const t = getTag(id);
-              return (
-                <span key={id} className='whitespace-nowrap'>
-                  {i > 0 && <span className='mr-2 text-border'>·</span>}
-                  {t?.label ?? id}
-                </span>
-              );
-            })}
-          </span>
-
-          <span
-            style={{ gridArea: 'year' }}
-            className='font-mono text-xs tabular-nums tracking-wider group-hover:text-foreground'
-          >
+        {/* year + links */}
+        <div className='flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-baseline sm:gap-4'>
+          <span className='font-mono text-xs tabular-nums tracking-wider text-muted-foreground group-hover:text-foreground'>
             {year}
           </span>
-
-          <span
-            style={{ gridArea: 'links' }}
-            className='flex items-center gap-3'
-          >
+          <span className='flex items-center gap-3'>
             {links.demo && <Jack href={links.demo} label='DEMO' />}
             {links.github && <Jack href={links.github} label='GH' />}
             {links.writeup && <Jack href={links.writeup} label='NOTES' />}

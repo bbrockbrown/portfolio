@@ -9,25 +9,15 @@ describe('project data invariants', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it('has unique patch numbers', () => {
-    const patches = projects.map((p) => p.patch);
-    expect(new Set(patches).size).toBe(patches.length);
-  });
-
-  it('has exactly one INIT project', () => {
-    expect(projects.filter((p) => p.init).length).toBe(1);
-  });
-
-  it('pins patch 0 to the INIT project', () => {
-    const init = projects.find((p) => p.init);
-    expect(init?.patch).toBe(0);
+  it('is ordered newest-first by year', () => {
+    const years = projects.map((p) => p.year);
+    expect(years).toEqual([...years].sort((a, b) => b - a));
   });
 
   it('resolves every tech entry to a canonical registry id', () => {
     for (const p of projects) {
       for (const t of p.tech) {
         expect(canonicalizeTag(t), `${p.id} tech "${t}"`).not.toBeNull();
-        // data is authored in canonical form, so the id must be in the registry directly
         expect(TAG_LABELS[t], `${p.id} tech "${t}" not canonical`).toBeDefined();
       }
     }
