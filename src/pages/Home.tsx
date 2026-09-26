@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { RotateCcw } from 'lucide-react';
 
+import { AsciiFieldBackground } from '@/components/AsciiFieldBackground';
 import Silly from '@/components/composite/Silly';
-import P5Sketch from '@/components/sketches/P5Sketch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
-  const [p5RefreshKey, setP5RefreshKey] = useState(0);
 
   useEffect(() => {
     // Trigger animation after component mounts
@@ -21,26 +18,20 @@ export default function Home() {
     };
   }, []);
 
-  const handleP5Refresh = () => {
-    setP5RefreshKey((prev) => prev + 1);
-  };
-
   return (
-    <div className='relative bg-background'>
+    <div className='relative'>
+      {/* Ambient ASCII scalar-field background, fixed to the viewport */}
+      <AsciiFieldBackground />
       {/* Easter egg - appears when scrolling above content */}
       <Silly />
       {/* Main content container */}
       <div className='relative z-10'>
-        {/* Hero section with P5 background */}
+        {/* Hero section */}
         <section className='full-viewport-height flex items-center justify-center relative overflow-hidden'>
-          {/* P5 Background - contained within this section */}
-          <div className='absolute inset-0 z-0'>
-            <P5Sketch refreshKey={p5RefreshKey} />
-          </div>
           <div
             className={`
                 text-left text-white p-4 md:p-8 rounded-lg backdrop-blur-sm bg-background/75
-                transition-all duration-1000 ease-out 
+                transition-all duration-1000 ease-out
                 w-[95%] sm:w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]
                 max-h-[85vh] overflow-y-auto relative z-10
                 ${
@@ -67,28 +58,7 @@ export default function Home() {
               </Link>
               !
             </p>
-            <p className='text-xs sm:text-xs md:text-xs mt-1 opacity-80'>
-              If you want to see this background do its magic again, click the refresh button at the
-              top right!
-            </p>
           </div>
-          {/* Refresh button */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                className='absolute top-3 right-3 p-2 rounded-full w-fit bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-200'
-                onClick={handleP5Refresh}
-              >
-                <RotateCcw
-                  color='white'
-                  className='w-6 h-6 hover:rotate-[-360deg] transition-all duration-1000'
-                />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Refresh cool background ッ</p>
-            </TooltipContent>
-          </Tooltip>
         </section>
       </div>
     </div>

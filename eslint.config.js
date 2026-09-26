@@ -62,6 +62,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist', 'node_modules', 'eslint.config.js', '.prettierrc.cjs', 'vitest.config.cjs'],
+    ignores: ['dist', 'node_modules', '.history', 'scripts', 'eslint.config.js', '.prettierrc.cjs', 'vitest.config.ts'],
   }
 );
