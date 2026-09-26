@@ -18,7 +18,7 @@ import {
 } from '@/types';
 
 export default function Stats() {
-  const { keyData, isLoading: keystrokeLoading, error: keystrokeError } = useKeystroke();
+  const { keyData, error: keystrokeError } = useKeystroke();
   const [topTracks, setTopTracks] = useState<SpotifyTopTracksResponse | null>(null);
   const [topArtists, setTopArtists] = useState<SpotifyTopArtistsResponse | null>(null);
   const [recentTracks, setRecentTracks] = useState<SpotifyRecentlyPlayedResponse | null>(null);
@@ -162,20 +162,14 @@ export default function Stats() {
                   </div>
                   <div className='text-center'>
                     <div className='text-xl font-semibold text-foreground'>
-                      {(
-                        keyData.recent_activity?.[0]?.count ??
-                        keyData.today_keystrokes ??
-                        0
-                      ).toLocaleString()}
+                      {(keyData.today_keystrokes ?? 0).toLocaleString()}
                     </div>
                     <div className='text-xs text-muted-foreground'>Today</div>
                   </div>
                 </div>
               ) : (
                 <div className='flex items-center justify-center p-8 text-muted-foreground'>
-                  <span className='text-sm'>
-                    {keystrokeLoading ? 'Waking up database...' : 'Fetching keyboard data...'}
-                  </span>
+                  <span className='text-sm'>Fetching keyboard data...</span>
                 </div>
               )}
             </StatsCard>
