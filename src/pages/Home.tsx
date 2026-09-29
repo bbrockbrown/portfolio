@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
 import { AsciiFieldBackground } from '@/components/AsciiFieldBackground';
-import Silly from '@/components/composite/Silly';
+import { NowPlayingCard } from '@/components/NowPlayingCard';
 
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
@@ -20,10 +20,10 @@ export default function Home() {
 
   return (
     <div className='relative'>
-      {/* Ambient ASCII scalar-field background, fixed to the viewport */}
+      {/* ASCII spectrum analyser of my last-played song (plasma until it loads) */}
       <AsciiFieldBackground />
-      {/* Easter egg - appears when scrolling above content */}
-      <Silly />
+      {/* What the background is reacting to */}
+      <NowPlayingCard />
       {/* Main content container */}
       <div className='relative z-10'>
         {/* Hero section */}
@@ -46,14 +46,17 @@ export default function Home() {
               My name is <span className='font-bold'>Brock Brown</span>.
             </p>
             <p className='text-sm sm:text-sm md:text-base lg:text-lg mb-1 md:mb-2 leading-relaxed'>
-              I'm a junior @ Northwestern University studying computer science with a passion for
+              I'm a senior @ Northwestern University studying computer science with a passion for
               bringing ideas to life. Whether it's developing impactful software or crafting
               math-driven animations like the one behind this page, I'm always eager to learn and
               grow through new opportunities.
             </p>
             <p className='text-sm sm:text-sm md:text-base mt-1 md:mt-2 lg:text-lg mb-2 md:mb-3 leading-relaxed'>
               Check out some of the things I have built{' '}
-              <Link to='/projects' className='font-bold underline underline-offset-2 decoration-transparent hover:decoration-white ease-in transition-all'>
+              <Link
+                to='/projects'
+                className='font-bold underline underline-offset-2 decoration-transparent hover:decoration-white ease-in transition-all'
+              >
                 here
               </Link>
               !

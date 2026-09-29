@@ -68,14 +68,14 @@ export const projects: Project[] = [
   },
   {
     id: 'inventory-management',
-    name: 'Inventory Management System',
+    name: 'Customized Inventory Management System',
     category: 'TOOL',
-    tech: ['react', 'javascript', 'node', 'postgresql', 'supabase', 'styled-components', 'ag-grid'],
+    tech: ['react', 'javascript', 'node', 'postgresql', 'supabase', 'styled-components', 'ag-grid', 'figma'],
     year: 2025,
     status: 'archived',
     links: {},
     description:
-      'Full-stack web application that provides a comprehensive inventory management system for the Institute for Therapy through the Arts (ITA), enabling therapists to submit order requests for therapeutic materials and administrators to review, approve, and track these orders with budget management capabilities and automated email notifications.',
+      'Web-based inventory system built with ITA Chicago (Institute for Therapy through the Arts) to replace their Excel workflow: therapists check items in and out and request materials, while admins approve purchase requests with budget tracking and email notifications and see where every item is. React/JavaScript interfaces designed in Figma, on Supabase Postgres with RESTful APIs and auth.',
     sigSeed: 'Inventory Management System',
   },
   {

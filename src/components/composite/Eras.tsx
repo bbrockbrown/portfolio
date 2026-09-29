@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import baking from '@/assets/baking.webp';
 import endurance from '@/assets/endurance.webp';
-import kendama from '@/assets/kendama.webp'
+import kendama from '@/assets/kendama.webp';
 import music from '@/assets/music.webp';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -51,7 +51,7 @@ export default function Eras() {
       bullets: [
         '150k+ listening minutes each year for past 3 years (104+ days of pure music)',
         'Avid concert goer',
-        'Spotify > Apple Music (sorry)'
+        'Spotify > Apple Music (sorry)',
       ],
       date: 'Ongoing',
     },
@@ -140,7 +140,7 @@ export default function Eras() {
           <span className='text-white font-medium text-lg'>Niches/Eras</span>
         </div>
         <div className='bg-gray-800/60 px-3 py-1 rounded-full'>
-          <span className='text-gray-300 text-sm font-medium'>Last 20 years</span>
+          <span className='text-gray-300 text-sm font-medium'>Last 21 years</span>
         </div>
       </div>
 

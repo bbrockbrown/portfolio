@@ -3,22 +3,40 @@ import { useEffect, useRef } from 'react';
 import { type AsciiFieldOptions, createAsciiField } from '@/lib/asciiField';
 import { plasmaField } from '@/lib/fields/plasmaField';
 import { createSimplexField } from '@/lib/fields/simplexField';
+import { createSpectrumField } from '@/lib/fields/spectrumField';
+import { loadNowPlayingSpectrum } from '@/lib/spectrum/loadNowPlaying';
 
 interface Props {
   options?: Partial<AsciiFieldOptions>; // mount-time only, by design
-  variant?: 'plasma' | 'simplex'; // which scalar field drives the glyphs; revert = one prop
+  variant?: 'spectrum' | 'plasma' | 'simplex'; // which scalar field drives the glyphs; revert = one prop
   className?: string;
 }
 
-export function AsciiFieldBackground({ options, variant = 'plasma', className }: Props) {
+export function AsciiFieldBackground({ options, variant = 'spectrum', className }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const spectrumField = !options?.field && variant === 'spectrum' ? createSpectrumField() : null;
     const fieldFn =
-      options?.field ?? (variant === 'simplex' ? createSimplexField() : plasmaField);
-    const field = createAsciiField(canvas, { ...options, field: fieldFn });
+      options?.field ??
+      spectrumField ??
+      (variant === 'simplex' ? createSimplexField() : plasmaField);
+    // The spectrum brings its own dark palette, so it can run far more opaque
+    // than the default single-colour field.
+    const alphas = spectrumField ? { minAlpha: 0.08, maxAlpha: 0.9 } : {};
+    const field = createAsciiField(canvas, { ...alphas, ...options, field: fieldFn });
+
+    let cancelled = false;
+    if (spectrumField) {
+      // No preview / any failure: stay on plasma, which the field shows until then.
+      loadNowPlayingSpectrum()
+        .then((result) => {
+          if (result.spectrogram && !cancelled) spectrumField.setSpectrogram(result.spectrogram);
+        })
+        .catch((err) => console.warn('spectrum unavailable, staying on plasma', err));
+    }
 
     // Theme color: the canvas element carries the token via CSS `color`,
     // so the engine just reads the computed value — and re-reads on theme flips.
@@ -57,6 +75,7 @@ export function AsciiFieldBackground({ options, variant = 'plasma', className }:
     document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
+      cancelled = true;
       themeObserver.disconnect();
       ro.disconnect();
       mq.removeEventListener('change', applyMotion);
