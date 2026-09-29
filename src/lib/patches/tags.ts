@@ -17,6 +17,7 @@ export const TAG_LABELS: Record<string, string> = {
   bootstrap: 'BOOTSTRAP',
   'styled-components': 'STYLED-COMPONENTS',
   'ag-grid': 'AG GRID',
+  figma: 'FIGMA',
   // backend / frameworks
   node: 'NODE',
   express: 'EXPRESS',

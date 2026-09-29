@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChartColumn, FolderClosed, Handshake, House, type LucideIcon, PersonStanding } from 'lucide-react';
+import {
+  Briefcase,
+  ChartColumn,
+  FolderClosed,
+  Handshake,
+  House,
+  type LucideIcon,
+  PersonStanding,
+} from 'lucide-react';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -24,6 +32,11 @@ const items: NavItem[] = [
     id: 'Projects',
     to: '/projects',
     icon: FolderClosed,
+  },
+  {
+    id: 'Experience',
+    to: '/experience',
+    icon: Briefcase,
   },
   {
     id: 'About',

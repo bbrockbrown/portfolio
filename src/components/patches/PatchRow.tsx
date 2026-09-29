@@ -17,7 +17,7 @@ function Jack({ href, label }: { href: string; label: string }) {
 }
 
 export function PatchRow({ project, index }: { project: Project; index: number }) {
-  const { name, category, tech, year, links, sigSeed } = project;
+  const { name, category, tech, year, links, sigSeed, description } = project;
   const num = String(index).padStart(2, '0');
 
   return (
@@ -34,7 +34,7 @@ export function PatchRow({ project, index }: { project: Project; index: number }
           className='mt-0.5 h-6 w-16 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground'
         />
 
-        {/* name + tech */}
+        {/* name + tech + description */}
         <div className='min-w-0 flex-1'>
           <div className='flex items-baseline gap-3'>
             <h3 className='truncate text-base font-semibold text-foreground sm:text-lg'>{name}</h3>
@@ -50,6 +50,8 @@ export function PatchRow({ project, index }: { project: Project; index: number }
               </span>
             ))}
           </p>
+          {/* Same treatment as Experience entries. */}
+          <p className='mt-2.5 text-sm leading-relaxed text-gray-300'>{description}</p>
         </div>
 
         {/* year + links */}

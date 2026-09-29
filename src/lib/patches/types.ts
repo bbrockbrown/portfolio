@@ -11,7 +11,7 @@ export interface Project {
   year: number;
   status?: 'active' | 'wip' | 'archived';
   links: { github?: string; demo?: string; writeup?: string };
-  description: string; // one-liner
+  description: string; // a sentence or two, shown under the tech line
   // Waveform seed; defaults to `name`. Set explicitly so a future rename can't
   // silently change the project's mark.
   sigSeed?: string;

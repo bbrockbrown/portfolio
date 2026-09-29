@@ -200,6 +200,16 @@ button {
   z-index: 10;
 }
 
+/* Now-playing card's equalizer icon */
+@keyframes eq {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
 /* Custom gentle bounce animation */
 @keyframes bounce-gentle {
   0% {
