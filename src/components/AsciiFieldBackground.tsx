@@ -30,10 +30,11 @@ export function AsciiFieldBackground({ options, variant = 'spectrum', className 
 
     let cancelled = false;
     if (spectrumField) {
-      // No preview / any failure: stay on plasma, which the field shows until then.
+      // Tracks without a preview get a stand-in spectrogram from the loader; only a
+      // failed now-playing request leaves plasma up.
       loadNowPlayingSpectrum()
         .then((result) => {
-          if (result.spectrogram && !cancelled) spectrumField.setSpectrogram(result.spectrogram);
+          if (!cancelled) spectrumField.setSpectrogram(result.spectrogram);
         })
         .catch((err) => console.warn('spectrum unavailable, staying on plasma', err));
     }
