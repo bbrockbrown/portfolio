@@ -24,7 +24,7 @@ export default function Footer() {
     }
   };
   return (
-    <footer className='relative flex flex-row justify-center bg-background md:w-[60%] w-[75%] justify-self-center border-t border-gray-800 py-8 px-4 sm:px-6 md:px-8'>
+    <footer className='relative flex flex-row justify-center bg-background md:w-[60%] w-[75%] justify-self-center border-t border-border py-8 px-4 sm:px-6 md:px-8'>
       <div className='max-w-7xl w-full'>
         <div className='flex flex-row justify-start items-start space-y-4'>
           {/* Social Links */}
@@ -33,7 +33,7 @@ export default function Footer() {
               href='https://github.com/bbrockbrown'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-gray-400 hover:text-white transition-colors duration-200'
+              className='text-muted-foreground hover:text-foreground transition-colors duration-200'
               aria-label='GitHub'
             >
               <Github className='w-6 h-6' />
@@ -42,7 +42,7 @@ export default function Footer() {
               href='https://www.linkedin.com/in/bbrockbrown/'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-gray-400 hover:text-white transition-colors duration-200'
+              className='text-muted-foreground hover:text-foreground transition-colors duration-200'
               aria-label='LinkedIn'
             >
               <Linkedin className='w-6 h-6' />
@@ -51,14 +51,14 @@ export default function Footer() {
               href='https://www.instagram.com/bbrockbrown/'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-gray-400 hover:text-white transition-colors duration-200'
+              className='text-muted-foreground hover:text-foreground transition-colors duration-200'
               aria-label='Instagram'
             >
               <Instagram className='w-6 h-6' />
             </a>
             <button
               onClick={handleCopyEmail}
-              className='text-gray-400 hover:text-white transition-colors duration-200 relative'
+              className='text-muted-foreground hover:text-foreground transition-colors duration-200 relative'
               aria-label='Copy email address'
               title={emailCopied ? 'Email copied!' : `Copy ${email}`}
             >
@@ -74,7 +74,7 @@ export default function Footer() {
                   }`}
                 />
                 <span
-                  className={`absolute text-xs whitespace-nowrap -top-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded transition-all duration-300 ${
+                  className={`absolute text-xs whitespace-nowrap -top-8 left-1/2 -translate-x-1/2 bg-muted text-foreground px-2 py-1 rounded transition-all duration-300 ${
                     emailCopied
                       ? 'opacity-100 translate-y-0'
                       : 'opacity-0 translate-y-2 pointer-events-none'
@@ -89,13 +89,13 @@ export default function Footer() {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className='absolute right-0 text-gray-400 hover:text-white transition-colors duration-200'
+                className='absolute right-0 text-muted-foreground hover:text-foreground transition-colors duration-200'
                 onClick={handleToTop}
                 title='Scroll to top'
               >
                 <ChevronUp
                   strokeWidth={2}
-                  className='w-8 h-8 stroke-gray-400 hover:stroke-white duration-200 transition-all'
+                  className='w-8 h-8 stroke-muted-foreground hover:stroke-foreground duration-200 transition-all'
                 />
               </button>
             </TooltipTrigger>

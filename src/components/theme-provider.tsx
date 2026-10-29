@@ -10,15 +10,27 @@ type ThemeProviderProps = {
 
 type ThemeProviderState = {
   theme: Theme;
+  /** What's actually applied once 'system' is resolved. */
+  resolvedTheme: 'dark' | 'light';
   setTheme: (theme: Theme) => void;
 };
 
 const initialState: ThemeProviderState = {
   theme: 'system',
+  resolvedTheme: 'dark',
   setTheme: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+
+function readStoredTheme(storageKey: string): Theme | null {
+  try {
+    const t = localStorage.getItem(storageKey);
+    return t === 'dark' || t === 'light' || t === 'system' ? t : null;
+  } catch {
+    return null;
+  }
+}
 
 export function ThemeProvider({
   children,
@@ -26,20 +38,35 @@ export function ThemeProvider({
   storageKey = 'vite-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  // Force dark mode - ignore all other theme settings
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>(() => readStoredTheme(storageKey) ?? defaultTheme);
+  const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
     const root = window.document.documentElement;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
 
-    root.classList.remove('light', 'dark');
-    root.classList.add('dark'); // Always force dark mode
+    const apply = () => {
+      const resolved = theme === 'system' ? (mq.matches ? 'dark' : 'light') : theme;
+      root.classList.remove('light', 'dark');
+      root.classList.add(resolved);
+      setResolvedTheme(resolved);
+    };
+    apply();
+
+    if (theme !== 'system') return;
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
   }, [theme]);
 
   const value = {
     theme,
+    resolvedTheme,
     setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
+      try {
+        localStorage.setItem(storageKey, theme);
+      } catch {
+        // private mode etc. — the choice just won't persist
+      }
       setTheme(theme);
     },
   };

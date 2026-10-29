@@ -16,6 +16,7 @@ export interface NowPlayingSpectrum {
 // One load per page session: the background and the now-playing card share it
 // (and StrictMode's double effects don't fetch + decode twice).
 let cached: Promise<NowPlayingSpectrum> | null = null;
+let cachedTrack: Promise<NowPlaying> | null = null;
 
 export function loadNowPlayingSpectrum(): Promise<NowPlayingSpectrum> {
   cached ??= load().catch((err) => {
@@ -25,10 +26,23 @@ export function loadNowPlayingSpectrum(): Promise<NowPlayingSpectrum> {
   return cached;
 }
 
-async function load(): Promise<NowPlayingSpectrum> {
+/** Just the track metadata — no preview download or FFT. */
+export function loadNowPlaying(): Promise<NowPlaying> {
+  cachedTrack ??= fetchTrack().catch((err) => {
+    cachedTrack = null;
+    throw err;
+  });
+  return cachedTrack;
+}
+
+async function fetchTrack(): Promise<NowPlaying> {
   const res = await fetch('/api/now-playing');
   if (!res.ok) throw new Error(`now-playing: HTTP ${res.status}`);
-  const track: NowPlaying = await res.json();
+  return res.json();
+}
+
+async function load(): Promise<NowPlayingSpectrum> {
+  const track = await loadNowPlaying();
 
   if (track.previewUrl) {
     try {

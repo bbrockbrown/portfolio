@@ -1,16 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  font-family: "Fira Code", monospace, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--mono);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: var(--foreground);
   background-color: var(--background);
 
   font-synthesis: none;
@@ -18,37 +17,48 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.1913 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.1913 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.1913 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Palette: cool paper / ink, one deep-violet accent. Light here, dark under .dark. */
+  --background: #f2f1f5;
+  --foreground: #1a1820;
+  --card: #f8f7fa;
+  --card-foreground: #1a1820;
+  --popover: #f8f7fa;
+  --popover-foreground: #1a1820;
+  --primary: #1a1820;
+  --primary-foreground: #f2f1f5;
+  --secondary: #e6e4ec;
+  --secondary-foreground: #1a1820;
+  --muted: #e6e4ec;
+  --muted-foreground: #6c6878;
+  --accent: #e6e4ec;
+  --accent-foreground: #1a1820;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.1913 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: #dad7e1;
+  --input: #dad7e1;
+  --ring: #6c6878;
+  --chart-1: #5b21b6;
+  --chart-2: #6c6878;
+  --chart-3: #1a1820;
+  --chart-4: #8b5cf6;
+  --chart-5: #b4afc0;
+  --sidebar: #f8f7fa;
+  --sidebar-foreground: #1a1820;
+  --sidebar-primary: #1a1820;
+  --sidebar-primary-foreground: #f2f1f5;
+  --sidebar-accent: #e6e4ec;
+  --sidebar-accent-foreground: #1a1820;
+  --sidebar-border: #dad7e1;
+  --sidebar-ring: #6c6878;
+
+  /* Spectrogram + code accents */
+  --hot: #5b21b6;
+  --str: #7a4fb5;
+  --scope-mid: #aca7b8;
+  --scope-opacity: 0.38;
+  --glass-tint: 70%;
+  --glass-edge: rgb(255 255 255 / 0.55);
 }
 
 body {
@@ -70,18 +80,12 @@ html {
   overflow-y: scroll;
 }
 
-/* Force dark mode */
-html {
-  color-scheme: dark;
-}
-
 html.dark {
   color-scheme: dark;
 }
 
-/* Override any light mode styles */
 html.light {
-  color-scheme: dark !important;
+  color-scheme: light;
 }
 
 /* Prevent viewport changes on mobile scroll */
@@ -114,6 +118,8 @@ button {
 }
 
 @theme inline {
+  --font-sans: var(--mono);
+  --font-mono: var(--mono);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -141,6 +147,7 @@ button {
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-hot: var(--hot);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -152,37 +159,44 @@ button {
 }
 
 .dark {
-  --background: oklch(0.1913 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: #141317;
+  --foreground: #e8e6ee;
+  --card: #1b1a1f;
+  --card-foreground: #e8e6ee;
+  --popover: #1b1a1f;
+  --popover-foreground: #e8e6ee;
+  --primary: #e8e6ee;
+  --primary-foreground: #141317;
+  --secondary: #232129;
+  --secondary-foreground: #e8e6ee;
+  --muted: #232129;
+  --muted-foreground: #827e8c;
+  --accent: #232129;
+  --accent-foreground: #e8e6ee;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: #2b2931;
+  --input: #2b2931;
+  --ring: #827e8c;
+  --chart-1: #a78bfa;
+  --chart-2: #827e8c;
+  --chart-3: #e8e6ee;
+  --chart-4: #7c3aed;
+  --chart-5: #48444f;
+  --sidebar: #1b1a1f;
+  --sidebar-foreground: #e8e6ee;
+  --sidebar-primary: #e8e6ee;
+  --sidebar-primary-foreground: #141317;
+  --sidebar-accent: #232129;
+  --sidebar-accent-foreground: #e8e6ee;
+  --sidebar-border: #2b2931;
+  --sidebar-ring: #827e8c;
+
+  /* Deep violet goes muddy on near-black, so dark mode lifts it to stay legible. */
+  --hot: #a78bfa;
+  --str: #c8b6f5;
+  --scope-mid: #57525f;
+  --glass-tint: 62%;
+  --glass-edge: rgb(255 255 255 / 0.07);
 }
 
 @layer base {
@@ -192,6 +206,38 @@ button {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Liquid-glass layer for content over the spectrogram. The blur lives on a
+   pseudo-element, not the box itself: backdrop-filter on an ancestor would
+   turn it into the containing block for `position: fixed` lightboxes inside. */
+@layer components {
+  .glass {
+    position: relative;
+    isolation: isolate;
+    border-radius: 20px;
+  }
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: color-mix(in srgb, var(--background) var(--glass-tint), transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5);
+    backdrop-filter: blur(18px) saturate(1.5);
+    border: 1px solid color-mix(in srgb, var(--foreground) 9%, transparent);
+    box-shadow:
+      inset 0 1px 0 var(--glass-edge),
+      0 18px 50px -24px rgb(0 0 0 / 0.35);
+    pointer-events: none;
+  }
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px dashed var(--hot);
+  outline-offset: 3px;
 }
 
 /* Site-wide stacking scaffold: keep positioned content above the fixed background

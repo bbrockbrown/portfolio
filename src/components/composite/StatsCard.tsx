@@ -24,7 +24,7 @@ export default function StatsCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }}
-      className='backdrop-blur-sm bg-background/75 border border-border rounded-lg p-6 hover:bg-background/85 transition-all duration-300'
+      className='bg-card/70 border border-border rounded-xl p-6 hover:bg-card transition-all duration-300'
     >
       <div className={`flex md:items-center md:justify-between mb-4 ${!expandable ? 'justify-start' : 'justify-between'}`}>
         <h3 className='text-lg font-semibold text-foreground md:text-start text-center'>{title}</h3>

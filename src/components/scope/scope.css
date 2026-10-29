@@ -1,0 +1,41 @@
+/* Site-wide spectrogram layer + its readout. Colours come from index.css. */
+
+.scope-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  font-family: var(--mono);
+  opacity: var(--scope-opacity);
+  transition: opacity 0.4s ease;
+}
+.scope[data-playing='true'] .scope-canvas {
+  opacity: calc(var(--scope-opacity) + 0.2);
+}
+
+.scope-readout {
+  position: fixed;
+  z-index: 40;
+  top: calc(env(safe-area-inset-top, 0px) + 22px);
+  right: max(24px, calc(env(safe-area-inset-right, 0px) + 24px));
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.scope-readout b {
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* Phones: the nav owns the top edge, so the readout drops to the bottom. */
+@media (max-width: 760px) {
+  .scope-readout {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 30px);
+    right: max(16px, calc(env(safe-area-inset-right, 0px) + 16px));
+  }
+}

@@ -74,7 +74,7 @@ function Track({
         </span>
       </div>
       <p className='mt-1 text-sm italic text-muted-foreground'>{sub}</p>
-      <p className='mt-2 text-sm leading-relaxed text-gray-300'>{entry.description}</p>
+      <p className='mt-2 text-sm leading-relaxed text-foreground/80'>{entry.description}</p>
       {entry.details?.map((d) => (
         <p key={d} className='mt-1.5 text-xs leading-relaxed text-muted-foreground'>
           {d}

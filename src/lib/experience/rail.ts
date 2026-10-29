@@ -2,12 +2,12 @@
 
 type RGB = [number, number, number];
 
-// Top → bottom: pink, purple, blue. Brighter cousins of the home page spectrum
-// palette, since these are thin strokes and small accents.
+// Top → bottom: magenta-violet, violet, indigo — the site accent's family, kept
+// mid-brightness so thin strokes read on both the light and dark theme.
 export const RAIL_STOPS: RGB[] = [
-  [219, 80, 150],
-  [150, 90, 220],
-  [80, 120, 235],
+  [192, 80, 220],
+  [124, 58, 237],
+  [79, 70, 229],
 ];
 
 /** Rail colour at a fraction 0..1 down its length, as `rgb(...)`. */

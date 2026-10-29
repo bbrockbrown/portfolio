@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { Check, Github, Instagram, Linkedin, Mail, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
 import me from '@/assets/me.webp';
+import { ScopeTrace } from '@/components/about/ScopeTrace';
+
+const LINKS = [
+  { href: 'https://github.com/bbrockbrown', label: 'github' },
+  { href: 'https://www.linkedin.com/in/bbrockbrown/', label: 'linkedin' },
+  { href: 'https://open.spotify.com/user/bbrockbrown', label: 'spotify' },
+];
 
 export default function About() {
   const location = useLocation();
-  const [emailCopied, setEmailCopied] = useState(false);
   const [imagePopupOpen, setImagePopupOpen] = useState(false);
-  const [animation, setAnimation] = useState(false);
-  const email = 'brockbrown46@gmail.com';
+  const [linkHovered, setLinkHovered] = useState(false);
+  const paragraph = 'text-foreground/80 leading-relaxed text-sm sm:text-[15px]';
 
   // On mount, check if they clicked the handshake and scroll to connect section
   useEffect(() => {
@@ -23,7 +29,6 @@ export default function About() {
             behavior: 'smooth',
             block: 'center',
           });
-          setAnimation(true);
         }
       }, 100);
     }
@@ -54,33 +59,21 @@ export default function About() {
     };
   }, [imagePopupOpen]);
 
-  const handleCopyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(email);
-      setEmailCopied(true);
-      setTimeout(() => setEmailCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy email:', err);
-    }
-  };
-
   return (
     <motion.div
-      className='bg-background px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 lg:py-20 relative z-10 min-h-screen'
+      className='min-h-screen px-2 sm:px-6 md:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 relative z-10'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <div className='max-w-4xl mx-auto space-y-8 sm:space-y-10 md:space-y-12'>
+      <div className='glass p-4 sm:p-8 md:p-10 max-w-4xl mx-auto space-y-8 sm:space-y-10'>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
         >
-          <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center'>
-            About Me
-          </h1>
+          <h1 className='text-lg sm:text-xl font-medium text-foreground'>about me</h1>
         </motion.div>
 
         {/* Content with floating image */}
@@ -92,7 +85,7 @@ export default function About() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <div className='w-64 h-72 sm:w-72 sm:h-80 md:w-80 md:h-96 bg-gray-800/50 rounded-2xl overflow-hidden'>
+            <div className='w-64 h-72 sm:w-72 sm:h-80 md:w-80 md:h-96 bg-muted/50 rounded-2xl overflow-hidden'>
               <img
                 src={me}
                 alt='Brock Brown'
@@ -109,122 +102,78 @@ export default function About() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
           >
-            {/* Paragraph 1 - Journey into CS */}
-            <div className='space-y-3 md:space-y-4'>
-              <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
-                As you may have already read, I am a junior studying CS @ Northwestern University in
-                full-stack development. Coming into college, I had very little programming
-                experience—I just knew certain commands in sequence could do cool things. What
-                transformed my path were the incredible people I met through campus opportunities
-                and coding clubs (DISC 🫶). Their mentorship and collaborative spirit not only taught
-                me the fundamentals but showed me how welcoming and dynamic the tech community could
-                be.
-              </p>
-            </div>
-
-            {/* Paragraph 2 - Growth and Passion */}
-            <div className='space-y-3 md:space-y-4'>
-              <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
-                What excites me most about software development is the intersection of creativity
-                and problem-solving. Whether I'm building interactive web experiences, crafting data
-                visualizations, or working on full-stack applications, I'm constantly amazed by how
-                code can bring ideas to life. I'm particularly drawn to projects that combine
-                technical complexity with meaningful user impact (and projects that are silly and
-                have no actual true purpose).
-              </p>
-            </div>
-
-            {/* Paragraph 3 - Personal Life */}
-            <div className='space-y-3 md:space-y-4'>
-              <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
-                Outside of coding, I'm passionate about staying active and exploring new challenges.
-                I looooove going to the gym, training for endurance events, and experimenting with
-                new recipes in the kitchen (you will find baking is my favorite 'creative' outlet).
-                I'm also an avid music listener and gamer, always eager to discover new artists or
-                dive into immersive game worlds.
-              </p>
-            </div>
-
-            {/* Paragraph 4 - Looking Forward */}
-            <div className='space-y-3 md:space-y-4'>
-              <p className='text-gray-300 leading-relaxed text-base sm:text-lg'>
-                Looking ahead, I'm excited to contribute to teams that value both technical
-                excellence and collaborative growth. I believe the best software comes from diverse
-                perspectives and continuous learning—principles that have shaped my journey from a
-                CS newcomer to someone passionate about building meaningful technology.
-              </p>
-            </div>
-
+            {/* Paragraph 1 - Intro / Origin */}
+            <p className={paragraph}>hi!</p>
+            <p className={paragraph}>
+              i'm a senior studying CS at Northwestern, graduating December 2026. i showed up to
+              college with basically zero programming experience. i just knew that typing certain
+              things in the right order made cool stuff happen. what actually got me hooked was the
+              people, especially at DISC 🫶. they taught me the fundamentals and made all of it feel
+              way less intimidating than it had any right to be. now i'm DISC's Co-President, so i
+              get to do the same thing for a 300+ member club. i also TA data structures &amp;
+              algorithms every now and then.
+            </p>
+            {/* Paragraph 2 - What I Like Building */}
+            <p className={paragraph}>
+              my favorite problems are the ones where i get to be a little creative. sometimes
+              that's a full-stack app, sometimes it's an interactive thing on the web, and lately
+              it's a lot of tooling around AI agents. i love projects with real technical depth that
+              real people end up using. i also love projects that are completely silly and serve no
+              purpose at all (both count imo).
+            </p>
+            {/* Paragraph 3 - Work Experience */}
+            <p className={paragraph}>
+              this past summer i was on Apple's Siri team, writing Swift for audio playback and
+              controls and going pretty deep on App Intents. before that, i was a full-stack intern
+              at Barton Studio in San Diego, where i got to work directly with clients on both of my
+              projects. on campus, i'm on the Mayfest Productions tech team. we shipped the official
+              Dillo Day app (6,000+ downloads!), and right now i'm building internal tools that make
+              life easier for the teams around us.
+            </p>
+            {/* Paragraph 4 - Personal Life */}
+            <p className={paragraph}>
+              outside of code, i looooove the gym and anything endurance. i run marathons, and i'm
+              always eyeing the next one. music is a huge part of my life: hyperpop, experimental
+              electronic, anything SOPHIE-adjacent. lately i've been making my own in Ableton and
+              live coding it in Strudel (the homepage is a little nod to that). i also bake (my
+              favorite 'creative' outlet) and game whenever i can find the time.
+            </p>
+            {/* Paragraph 5 - Looking Forward */}
+            <p className={paragraph}>
+              next up, i'm looking for my first full-time role starting in 2027. i want to be
+              somewhere that builds ambitious stuff and takes the time to get it right, especially
+              where AI meets products people actually use. if that sounds like your team, i'd love
+              to chat.
+            </p>
             {/* Social Links Section */}
             <motion.div
               id='connect'
-              className={`flex flex-row justify-center items-center pt-4 md:pt-5 border-t border-gray-800 clear-both mb-16 md:mb-7 relative`}
+              className='flex flex-row items-center gap-3 sm:gap-4 pt-4 md:pt-5 border-t border-border clear-both mb-16 md:mb-7 relative'
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div
-                id='animator'
-                className={`${
-                  animation && 'circle-animation'
-                } overflow-hidden relative flex items-center justify-center w-min space-x-4 sm:space-x-6`}
-              >
-                <a
-                  href='https://github.com/bbrockbrown'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-gray-400 hover:text-white transition-colors duration-200 transform hover:scale-110 p-2'
-                  aria-label='GitHub'
-                >
-                  <Github className='w-7 h-7 sm:w-8 sm:h-8' />
-                </a>
-                <a
-                  href='https://www.linkedin.com/in/bbrockbrown/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-gray-400 hover:text-white transition-colors duration-200 transform hover:scale-110 p-2'
-                  aria-label='LinkedIn'
-                >
-                  <Linkedin className='w-7 h-7 sm:w-8 sm:h-8' />
-                </a>
-                <a
-                  href='https://www.instagram.com/bbrockbrown/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='text-gray-400 hover:text-white transition-colors duration-200 transform hover:scale-110 p-2'
-                  aria-label='Instagram'
-                >
-                  <Instagram className='w-7 h-7 sm:w-8 sm:h-8' />
-                </a>
-                <button
-                  onClick={handleCopyEmail}
-                  className='text-gray-400 hover:text-white transition-colors duration-200 transform hover:scale-110 relative p-2'
-                  aria-label='Copy email address'
-                  title={emailCopied ? 'Email copied!' : `Copy ${email}`}
-                >
-                  <div className='relative'>
-                    <Mail
-                      className={`w-7 h-7 sm:w-8 sm:h-8 transition-all duration-200 ${
-                        emailCopied ? 'opacity-0 scale-75' : 'opacity-100 scale-100'
-                      }`}
-                    />
-                    <Check
-                      className={`w-7 h-7 sm:w-8 sm:h-8 text-green-400 absolute inset-0 transition-all duration-200 ${
-                        emailCopied ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-                      }`}
-                    />
-                    <span
-                      className={`absolute text-xs whitespace-nowrap -top-12 sm:-top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-3 py-1 rounded transition-all duration-200 ${
-                        emailCopied
-                          ? 'opacity-100 translate-y-0'
-                          : 'opacity-0 translate-y-2 pointer-events-none'
-                      }`}
+              <ScopeTrace side='left' active={linkHovered} className='min-w-6 flex-1' />
+              <span className='shrink-0 whitespace-nowrap'>
+                {LINKS.map((l, i) => (
+                  <span key={l.href} className='shrink-0 whitespace-nowrap'>
+                    {i > 0 && ' · '}
+                    <a
+                      className={'text-foreground/80 shrink-0 whitespace-nowrap'}
+                      href={l.href}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      onPointerEnter={() => setLinkHovered(true)}
+                      onPointerLeave={() => setLinkHovered(false)}
+                      onFocus={() => setLinkHovered(true)}
+                      onBlur={() => setLinkHovered(false)}
                     >
-                      Email copied!
-                    </span>
-                  </div>
-                </button>
-              </div>
+                      {l.label}
+                    </a>
+                  </span>
+                ))}
+              </span>
+              <ScopeTrace side='right' active={linkHovered} className='min-w-6 flex-1' />
             </motion.div>
           </motion.div>
         </div>

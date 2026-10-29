@@ -128,7 +128,7 @@ export default function Eras() {
 
   return (
     <motion.div
-      className='border border-border rounded-lg p-6 bg-background/75 hover:bg-background/85 backdrop-blur-sm transition-all duration-300'
+      className='border border-border rounded-xl p-6 bg-card/70 hover:bg-card transition-all duration-300'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -136,11 +136,11 @@ export default function Eras() {
     >
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center space-x-3'>
-          <SwitchCamera className='w-5 h-5 text-white' />
-          <span className='text-white font-medium text-lg'>Niches/Eras</span>
+          <SwitchCamera className='w-5 h-5 text-foreground' />
+          <span className='text-foreground font-medium text-lg'>Niches/Eras</span>
         </div>
-        <div className='bg-gray-800/60 px-3 py-1 rounded-full'>
-          <span className='text-gray-300 text-sm font-medium'>Last 21 years</span>
+        <div className='bg-muted/60 px-3 py-1 rounded-full'>
+          <span className='text-foreground/80 text-sm font-medium'>Last 21 years</span>
         </div>
       </div>
 
@@ -169,10 +169,10 @@ export default function Eras() {
           transition={{ duration: 0.3, ease: 'easeInOut' }}
         >
           {/* Image Section */}
-          <div className='flex-shrink-0 md:w-48 w-full h-auto md:h-32 bg-gray-800/50 rounded-lg overflow-hidden'>
+          <div className='flex-shrink-0 md:w-48 w-full h-auto md:h-32 bg-muted/50 rounded-lg overflow-hidden'>
             {currentEra.image_url.includes('placeholder') ? (
-              <div className='w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center'>
-                <span className='text-gray-400 text-sm'>Image Placeholder</span>
+              <div className='w-full h-full bg-gradient-to-br from-muted to-muted/60 flex items-center justify-center'>
+                <span className='text-muted-foreground text-sm'>Image Placeholder</span>
               </div>
             ) : (
               <img
@@ -188,11 +188,11 @@ export default function Eras() {
           <div className='flex-1 space-y-4'>
             {currentEra.id === 'kendama' ? (
               <div>
-                <h3 className='text-white font-semibold text-xl mb-2'>
+                <h3 className='text-foreground font-semibold text-xl mb-2'>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <a
-                        className='underline decoration-1 decoration-gray-900/20 underline-offset-2 hover:text-gray-200/95 hover:decoration-gray-500 transition-all'
+                        className='underline decoration-1 decoration-foreground/20 underline-offset-2 hover:text-foreground/95 hover:decoration-muted-foreground transition-all'
                         href='https://kendamausa.com/what-is-kendama/'
                         target='_blank'
                       >
@@ -208,13 +208,13 @@ export default function Eras() {
               </div>
             ) : (
               <div>
-                <h3 className='text-white font-semibold text-xl mb-2'>{currentEra.title}</h3>
+                <h3 className='text-foreground font-semibold text-xl mb-2'>{currentEra.title}</h3>
               </div>
             )}
             <ul className='space-y-2'>
               {currentEra.bullets.map((bullet, index) => (
-                <li key={index} className='flex items-start text-gray-300 text-sm'>
-                  <div className='w-1.5 h-1.5 bg-green-400 rounded-full mr-3 flex-shrink-0 mt-1.5'></div>
+                <li key={index} className='flex items-start text-foreground/80 text-sm'>
+                  <div className='w-1.5 h-1.5 bg-hot rounded-full mr-3 flex-shrink-0 mt-1.5'></div>
                   <span className='text-start'>{bullet}</span>
                 </li>
               ))}
@@ -227,10 +227,10 @@ export default function Eras() {
       <div className='flex items-center justify-between mt-6'>
         <button
           onClick={prevEra}
-          className='flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors'
+          className='flex items-center space-x-2 px-3 py-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors'
         >
-          <ChevronLeft className='w-4 h-4 text-gray-300' />
-          <span className='text-gray-300 text-sm'>Previous</span>
+          <ChevronLeft className='w-4 h-4 text-foreground/80' />
+          <span className='text-foreground/80 text-sm'>Previous</span>
         </button>
 
         <div className='flex space-x-2'>
@@ -242,7 +242,7 @@ export default function Eras() {
                 setCurrentIndex(index);
               }}
               className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-green-400' : 'bg-gray-600'
+                index === currentIndex ? 'bg-hot' : 'bg-muted-foreground/40'
               }`}
             />
           ))}
@@ -250,10 +250,10 @@ export default function Eras() {
 
         <button
           onClick={nextEra}
-          className='flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors'
+          className='flex items-center space-x-2 px-3 py-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors'
         >
-          <span className='text-gray-300 text-sm'>Next</span>
-          <ChevronRight className='w-4 h-4 text-gray-300' />
+          <span className='text-foreground/80 text-sm'>Next</span>
+          <ChevronRight className='w-4 h-4 text-foreground/80' />
         </button>
       </div>
 

@@ -81,8 +81,8 @@ export default function Stats() {
 
   return (
     <>
-      <section className='min-h-screen bg-background px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 lg:py-20 relative z-10'>
-        <div className='max-w-7xl mx-auto md:mb-10 mb-20'>
+      <section className='min-h-screen px-2 sm:px-6 md:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 relative z-10'>
+        <div className='glass p-4 sm:p-8 md:p-10 max-w-6xl mx-auto'>
           <SectionHeader title='Stats' subtitle='A peek into my personal and digital life!' />
 
           {/* GitHub Activity - Full Width */}
@@ -90,15 +90,15 @@ export default function Stats() {
             {contributionData ? (
               <GitHubActivity data={contributionData} />
             ) : (
-              <div className='flex flex-col justify-between backdrop-blur-sm bg-background/75 border border-border rounded-lg p-4 sm:p-6 hover:bg-background/85 transition-all duration-300'>
+              <div className='flex flex-col justify-between bg-card/70 border border-border rounded-xl p-4 sm:p-6 hover:bg-card transition-all duration-300'>
                 <div>
                   <div className='flex items-center justify-between mb-4 sm:mb-6'>
                     <div className='flex items-center space-x-2 sm:space-x-3'>
-                      <div className='w-4 h-4 sm:w-5 sm:h-5 bg-gray-700 rounded animate-pulse' />
-                      <span className='text-white font-medium text-base sm:text-lg'>GitHub</span>
+                      <div className='w-4 h-4 sm:w-5 sm:h-5 bg-muted rounded animate-pulse' />
+                      <span className='text-foreground font-medium text-base sm:text-lg'>GitHub</span>
                     </div>
-                    <div className='bg-gray-800/60 px-2 py-1 sm:px-3 rounded-full'>
-                      <span className='text-gray-300 text-xs sm:text-sm font-medium'>Last 25 weeks</span>
+                    <div className='bg-muted/60 px-2 py-1 sm:px-3 rounded-full'>
+                      <span className='text-foreground/80 text-xs sm:text-sm font-medium'>Last 25 weeks</span>
                     </div>
                   </div>
 
@@ -108,7 +108,7 @@ export default function Stats() {
                       {Array.from({ length: 7 }).map((_, dayIndex) => (
                         <div key={dayIndex} className='flex space-x-0.5 sm:space-x-1'>
                           {Array.from({ length: 25 }).map((_, weekIndex) => (
-                            <div key={weekIndex} className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-gray-800/50 rounded-sm animate-pulse' />
+                            <div key={weekIndex} className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-foreground/[0.07] rounded-sm animate-pulse' />
                           ))}
                         </div>
                       ))}
@@ -117,10 +117,10 @@ export default function Stats() {
                 </div>
 
                 {/* Loading skeleton for date range */}
-                <div className='flex justify-between items-center text-gray-400 text-xs sm:text-sm'>
-                  <div className='hidden sm:block w-20 h-4 bg-gray-700 rounded animate-pulse' />
+                <div className='flex justify-between items-center text-muted-foreground text-xs sm:text-sm'>
+                  <div className='hidden sm:block w-20 h-4 bg-muted rounded animate-pulse' />
                   <span className='text-muted-foreground'>Fetching GitHub activity...</span>
-                  <div className='w-20 h-4 bg-gray-700 rounded animate-pulse' />
+                  <div className='w-20 h-4 bg-muted rounded animate-pulse' />
                 </div>
               </div>
             )}
