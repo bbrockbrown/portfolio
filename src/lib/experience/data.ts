@@ -44,7 +44,7 @@ export const sides: Side[] = [
       {
         id: 'apple',
         org: 'Apple',
-        role: 'Software Engineering Intern · Siri & AI/ML (Speech/Audio)',
+        role: 'Software Engineering Intern · Siri (Audio/Playback Controls)',
         location: 'Cupertino, CA',
         start: '2026-06',
         end: 'present',
