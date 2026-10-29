@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ScopeContext } from '@/lib/audio/scopeContext';
 import { Synth } from '@/lib/audio/synth';
@@ -17,6 +17,13 @@ export function ScopeProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setPlaying(synth.playing);
     }
+  }, [synth]);
+
+  // Don't keep playing in a background tab; pick back up when the user returns.
+  useEffect(() => {
+    const onVisibility = () => (document.hidden ? synth.pause() : synth.resume());
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
   }, [synth]);
 
   const value = useMemo(() => ({ synth, playing, toggle }), [synth, playing, toggle]);

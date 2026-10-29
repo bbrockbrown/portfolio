@@ -1,4 +1,15 @@
-import { colFreq, DEFAULT_CUTOFF, HAT, KICK, LEAD, mtof, SNARE, STEP, STEPS } from './patch';
+import {
+  ACID,
+  CLAP,
+  colFreq,
+  DEFAULT_CUTOFF,
+  HAT,
+  KICK,
+  mtof,
+  OPEN_HAT,
+  STEP,
+  STEPS,
+} from './patch';
 
 // Web Audio rendition of the patch. The AudioContext is created lazily on the
 // first start(), which must come from a user gesture — audio is always opt-in.
@@ -23,7 +34,6 @@ type Ctor = typeof AudioContext;
 export class Synth {
   private ac: AudioContext | null = null;
   private bus: GainNode | null = null;
-  private filter: BiquadFilterNode | null = null;
   private analyser: AnalyserNode | null = null;
   private freqData: Uint8Array<ArrayBuffer> | null = null;
   private noiseBuf: AudioBuffer | null = null;
@@ -64,9 +74,18 @@ export class Synth {
     await this.ac?.suspend();
   }
 
+  /** Where each acid note's filter envelope settles; read per note, so sweeps land on the next 16th. */
   setCutoff(hz: number) {
     this.cutoff = hz;
-    if (this.ac && this.filter) this.filter.frequency.setTargetAtTime(hz, this.ac.currentTime, 0.03);
+  }
+
+  /** Tab hidden: freeze the clock without stopping, so resume() picks up mid-bar. */
+  pause() {
+    if (this.playing) this.ac?.suspend().catch(() => {});
+  }
+
+  resume() {
+    if (this.playing) this.ac?.resume().catch(() => {});
   }
 
   /** Current 16th-note step (0..15) of the playing clock, or -1 if stopped. */
@@ -96,7 +115,7 @@ export class Synth {
     clearInterval(this.timer);
     this.playing = false;
     this.ac?.close().catch(() => {});
-    this.ac = this.bus = this.filter = this.analyser = null;
+    this.ac = this.bus = this.analyser = null;
     this.freqData = null;
     this.noiseBuf = null;
   }
@@ -127,11 +146,6 @@ export class Synth {
     const analyser = ac.createAnalyser();
     analyser.fftSize = 4096;
     analyser.smoothingTimeConstant = 0.55;
-    const filter = ac.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.Q.value = 9;
-    filter.frequency.value = this.cutoff;
-    filter.connect(master);
     master.connect(comp);
     comp.connect(makeup);
     makeup.connect(drive);
@@ -146,7 +160,6 @@ export class Synth {
 
     this.ac = ac;
     this.bus = master;
-    this.filter = filter;
     this.analyser = analyser;
     this.freqData = new Uint8Array(analyser.frequencyBinCount);
     this.noiseBuf = buf;
@@ -159,12 +172,13 @@ export class Synth {
     while (this.nextStep * STEP + this.t0 < ac.currentTime + LOOKAHEAD_S) {
       const t = this.nextStep * STEP + this.t0;
       const s = this.nextStep % STEPS;
-      const bar = Math.floor(this.nextStep / STEPS) % LEAD.length;
+      const bar = Math.floor(this.nextStep / STEPS) % ACID.length;
       if (KICK[s]) this.kick(t);
-      if (SNARE[s]) this.snare(t);
-      if (HAT[s]) this.noise(t, 'highpass', 7500, s % 2 ? 0.14 : 0.08, 0.05);
-      const note = LEAD[bar][s];
-      if (note != null) this.lead(t, note);
+      if (CLAP[s]) this.clap(t);
+      if (HAT[s]) this.noise(t, 'highpass', 8000, s % 2 ? 0.11 : 0.07, 0.035);
+      if (OPEN_HAT[s]) this.noise(t, 'highpass', 7000, 0.15, 0.22);
+      const note = ACID[bar][s];
+      if (note != null) this.acid(t, note);
       this.nextStep++;
     }
   }
@@ -179,9 +193,9 @@ export class Synth {
     const ac = this.ac!;
     const o = ac.createOscillator();
     const v = ac.createGain();
-    o.frequency.setValueAtTime(150, t);
-    o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
-    this.env(v, t, 1, 0.38);
+    o.frequency.setValueAtTime(170, t);
+    o.frequency.exponentialRampToValueAtTime(48, t + 0.07);
+    this.env(v, t, 1, 0.4);
     o.connect(v).connect(this.bus!);
     o.start(t);
     o.stop(t + 0.4);
@@ -213,32 +227,49 @@ export class Synth {
     s.stop(t + decay + 0.02);
   }
 
-  private snare(t: number) {
+  /** Three fast noise bursts then a short tail: the classic drum-machine clap. */
+  private clap(t: number) {
     const ac = this.ac!;
-    this.noise(t, 'bandpass', 1800, 0.5, 0.18);
-    const o = ac.createOscillator();
+    const src = ac.createBufferSource();
+    const bp = ac.createBiquadFilter();
     const v = ac.createGain();
-    o.type = 'triangle';
-    o.frequency.value = 190;
-    this.env(v, t, 0.3, 0.08);
-    o.connect(v).connect(this.bus!);
-    o.start(t);
-    o.stop(t + 0.1);
+    src.buffer = this.noiseBuf;
+    bp.type = 'bandpass';
+    bp.frequency.value = 1200;
+    bp.Q.value = 0.8;
+    const g = v.gain;
+    g.setValueAtTime(0.0001, t);
+    for (const [dt, peak] of [
+      [0, 0.45],
+      [0.011, 0.4],
+      [0.022, 0.5],
+    ]) {
+      g.setValueAtTime(peak, t + dt);
+      g.exponentialRampToValueAtTime(0.03, t + dt + 0.009);
+    }
+    g.setValueAtTime(0.55, t + 0.033);
+    g.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    src.connect(bp).connect(v).connect(this.bus!);
+    src.start(t);
+    src.stop(t + 0.25);
   }
 
-  private lead(t: number, m: number) {
+  /** 303-style acid: one sawtooth through a resonant lowpass whose envelope
+   *  snaps open and closes onto the pointer's cutoff. */
+  private acid(t: number, m: number) {
     const ac = this.ac!;
+    const o = ac.createOscillator();
+    const lp = ac.createBiquadFilter();
     const v = ac.createGain();
-    this.env(v, t, 0.26, STEP * 2.2);
-    for (const det of [-12, 12]) {
-      const o = ac.createOscillator();
-      o.type = 'sawtooth';
-      o.frequency.value = mtof(m);
-      o.detune.value = det;
-      o.connect(v);
-      o.start(t);
-      o.stop(t + STEP * 2.3);
-    }
-    v.connect(this.filter!);
+    o.type = 'sawtooth';
+    o.frequency.value = mtof(m);
+    lp.type = 'lowpass';
+    lp.Q.value = 12;
+    lp.frequency.setValueAtTime(Math.min(14000, this.cutoff * 4), t);
+    lp.frequency.exponentialRampToValueAtTime(this.cutoff, t + 0.12);
+    this.env(v, t, 0.3, STEP * 0.95);
+    o.connect(lp).connect(v).connect(this.bus!);
+    o.start(t);
+    o.stop(t + STEP);
   }
 }

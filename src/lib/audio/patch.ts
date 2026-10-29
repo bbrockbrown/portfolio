@@ -1,20 +1,23 @@
-// The homepage patch: one 16-step bar of 2-step-ish drums plus a two-bar lead.
-// Shared by the simulated spectrum (before you press run) and the real synth,
-// so what you see idling is what you hear once it plays. Pure data — no DOM.
+// The site's patch: one 16-step bar of four-on-the-floor techno drums plus a
+// two-bar acid bassline. Shared by the simulated spectrum (before you press run)
+// and the real synth, so what you see idling is what you hear once it plays.
+// Pure data — no DOM.
 
-export const BPM = 140;
+export const BPM = 132;
 /** Seconds per 16th-note step. */
 export const STEP = 60 / BPM / 4;
 export const STEPS = 16;
 
-export const KICK = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0];
-export const SNARE = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1];
-export const HAT = [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1];
+export const KICK = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0];
+export const CLAP = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0];
+/** Closed hats on every 16th except the offbeats, where the open hat takes over. */
+export const HAT = [1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1];
+export const OPEN_HAT = [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0];
 
-/** MIDI notes per step, one row per bar; null = rest (previous note rings on). */
-export const LEAD: (number | null)[][] = [
-  [72, null, 75, null, 79, null, 77, 75, 72, null, 70, null, 67, null, 70, 72],
-  [70, null, 74, null, 77, null, 75, 74, 70, null, 69, null, 65, null, 69, 70],
+/** Acid line: MIDI notes per step, one row per bar; null = rest. Each note is a 16th. */
+export const ACID: (number | null)[][] = [
+  [36, 36, 48, null, 36, 39, null, 36, 43, null, 36, 46, 36, null, 48, 39],
+  [36, 36, 48, null, 36, 41, null, 36, 43, null, 39, 46, 36, 48, null, 43],
 ];
 
 export const mtof = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
