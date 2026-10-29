@@ -69,11 +69,11 @@ export default function GitHubActivity({ data }: GitHubActivityProps) {
 
   // Get contribution level based on count (similar to GitHub's levels)
   const getContributionLevel = (count: number): string => {
-    if (count === 0) return 'bg-gray-800/50';
-    if (count <= 3) return 'bg-green-900/70';
-    if (count <= 6) return 'bg-green-700/80';
-    if (count <= 9) return 'bg-green-500/90';
-    return 'bg-green-300';
+    if (count === 0) return 'bg-foreground/[0.07]';
+    if (count <= 3) return 'bg-hot/25';
+    if (count <= 6) return 'bg-hot/50';
+    if (count <= 9) return 'bg-hot/75';
+    return 'bg-hot';
   };
 
   // Get start and end dates for display
@@ -98,7 +98,7 @@ export default function GitHubActivity({ data }: GitHubActivityProps) {
 
   return (
     <motion.div
-      className='flex flex-col justify-between backdrop-blur-sm bg-background/75 border border-border rounded-lg p-4 sm:p-6 hover:bg-background/85 transition-all duration-300'
+      className='flex flex-col justify-between bg-card/70 border border-border rounded-xl p-4 sm:p-6 hover:bg-card transition-all duration-300'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -106,11 +106,11 @@ export default function GitHubActivity({ data }: GitHubActivityProps) {
       <div>
         <div className='flex items-center justify-between mb-4 sm:mb-6'>
           <div className='flex items-center space-x-2 sm:space-x-3'>
-            <Github className='w-4 h-4 sm:w-5 sm:h-5 text-white' />
-            <span className='text-white font-medium text-base sm:text-lg'>GitHub</span>
+            <Github className='w-4 h-4 sm:w-5 sm:h-5 text-foreground' />
+            <span className='text-foreground font-medium text-base sm:text-lg'>GitHub</span>
           </div>
-          <div className='bg-gray-800/60 px-2 py-1 sm:px-3 rounded-full'>
-            <span className='text-gray-300 text-xs sm:text-sm font-medium'>Last 3 months</span>
+          <div className='bg-muted/60 px-2 py-1 sm:px-3 rounded-full'>
+            <span className='text-foreground/80 text-xs sm:text-sm font-medium'>Last 3 months</span>
           </div>
         </div>
 
@@ -166,9 +166,9 @@ export default function GitHubActivity({ data }: GitHubActivityProps) {
       </div>
 
       {/* Date Range */}
-      <div className='flex justify-between items-center text-gray-400 text-xs sm:text-sm'>
+      <div className='flex justify-between items-center text-muted-foreground text-xs sm:text-sm'>
         <span className='hidden sm:inline'>{startDate && formatDate(startDate)}</span>
-        <span className='text-green-400 font-medium'>{totalContributions} contributions</span>
+        <span className='text-hot font-medium'>{totalContributions} contributions</span>
         <span>{endDate && formatDate(endDate)}</span>
       </div>
     </motion.div>

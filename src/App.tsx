@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { KeystrokeProvider } from '@/components/keystroke-provider';
+import { ScopeBackground } from '@/components/scope/ScopeBackground';
+import { ScopeProvider } from '@/components/scope/ScopeProvider';
 import { ThemeProvider } from '@/components/theme-provider';
 import About from '@/pages/About';
 import Experience from '@/pages/Experience';
@@ -17,16 +19,21 @@ function App() {
     <BrowserRouter>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <KeystrokeProvider>
-          <div className="relative">
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='about' element={<About />} />
-              <Route path='projects' element={<Projects />} />
-              <Route path='experience' element={<Experience />} />
-              <Route path='stats' element={<Stats />} />
-            </Routes>
-            <NavMenu />
-          </div>
+          <ScopeProvider>
+            <div className='relative'>
+              {/* Mounted once, outside Routes, so the spectrogram and any playing
+                audio carry across page changes. */}
+              <ScopeBackground />
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='about' element={<About />} />
+                <Route path='projects' element={<Projects />} />
+                <Route path='experience' element={<Experience />} />
+                <Route path='stats' element={<Stats />} />
+              </Routes>
+              <NavMenu />
+            </div>
+          </ScopeProvider>
         </KeystrokeProvider>
       </ThemeProvider>
     </BrowserRouter>

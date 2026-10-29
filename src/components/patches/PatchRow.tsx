@@ -22,7 +22,7 @@ export function PatchRow({ project, index }: { project: Project; index: number }
 
   return (
     <li className='group border-b border-border'>
-      <div className='flex items-start gap-4 px-3 py-4 transition-colors group-hover:bg-accent/30 sm:gap-5'>
+      <div className='flex items-start gap-3 px-1 py-4 transition-colors group-hover:bg-accent/30 sm:gap-5 sm:px-3'>
         {/* number */}
         <span className='mt-1 w-6 shrink-0 font-mono text-xs tabular-nums tracking-wider text-muted-foreground group-hover:text-foreground'>
           {num}
@@ -31,7 +31,7 @@ export function PatchRow({ project, index }: { project: Project; index: number }
         {/* waveform signature */}
         <WaveformSignature
           seed={sigSeed ?? name}
-          className='mt-0.5 h-6 w-16 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground'
+          className='mt-0.5 hidden h-6 w-16 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground sm:block'
         />
 
         {/* name + tech + description */}
@@ -51,7 +51,7 @@ export function PatchRow({ project, index }: { project: Project; index: number }
             ))}
           </p>
           {/* Same treatment as Experience entries. */}
-          <p className='mt-2.5 text-sm leading-relaxed text-gray-300'>{description}</p>
+          <p className='mt-2.5 text-sm leading-relaxed text-foreground/80'>{description}</p>
         </div>
 
         {/* year + links */}

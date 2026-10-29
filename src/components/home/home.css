@@ -1,0 +1,150 @@
+/* Homepage: the bio-as-patch card floating on the site spectrogram.
+   Glass surface comes from `.glass` (index.css); this is layout + code colours. */
+
+/* Pointer drags sweep the filter instead of panning the page. */
+.home section {
+  touch-action: none;
+}
+
+.patch-card {
+  position: fixed;
+  z-index: 20;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(630px, calc(100vw - 72px));
+  max-height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.patch-card h1 {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.patch-card h1 span,
+.patch-card .n {
+  color: var(--hot);
+}
+.patch-card .sub {
+  color: var(--muted-foreground);
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.patch-card pre {
+  margin: 0;
+  padding: 22px 0 0;
+  font: inherit;
+  white-space: pre-wrap;
+  min-width: 0;
+  counter-reset: ln;
+}
+.patch-card pre .l {
+  display: block;
+  padding-left: 30px;
+  position: relative;
+}
+.patch-card pre .l::before {
+  counter-increment: ln;
+  content: counter(ln);
+  position: absolute;
+  left: 0;
+  width: 18px;
+  text-align: right;
+  color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.patch-card .c {
+  color: var(--muted-foreground);
+}
+.patch-card .k {
+  color: var(--foreground);
+}
+.patch-card .s {
+  color: var(--str);
+}
+.patch-card pre a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--muted-foreground) 60%, transparent);
+  text-underline-offset: 3px;
+}
+.patch-card pre a:hover {
+  color: var(--foreground);
+  text-decoration-color: var(--hot);
+}
+/* Strudel-style active-event highlight on the music lines. Outline + background
+   only, so lighting a token never reflows the line. */
+.patch-card .tok {
+  border-radius: 2px;
+  outline: 1px solid transparent;
+  outline-offset: 1px;
+  transition:
+    outline-color 0.12s ease-out,
+    background-color 0.12s ease-out;
+}
+.patch-card .tok.on {
+  outline-color: var(--hot);
+  background: color-mix(in srgb, var(--hot) 18%, transparent);
+  transition: none;
+}
+.patch-card .flash {
+  animation: patch-flash 0.5s ease-out;
+}
+@keyframes patch-flash {
+  from {
+    background: color-mix(in srgb, var(--hot) 18%, transparent);
+  }
+}
+
+.patch-card .transport {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.patch-card .run {
+  font: inherit;
+  font-size: 12px;
+  color: var(--background);
+  background: var(--hot);
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 16px;
+  letter-spacing: 0.04em;
+}
+.patch-card .run[aria-pressed='true'] {
+  background: var(--foreground);
+}
+.patch-card .hint {
+  color: var(--muted-foreground);
+  font-size: 11px;
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .patch-card {
+    width: calc(100vw - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    max-height: calc(100% - 150px);
+    padding: 20px;
+  }
+  .patch-card h1 {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .patch-card .flash {
+    animation: none;
+  }
+}

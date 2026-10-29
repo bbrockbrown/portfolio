@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import { dominantColor } from '@/lib/dominantColor';
-import { loadNowPlayingSpectrum, type NowPlayingSpectrum } from '@/lib/spectrum/loadNowPlaying';
+import { loadNowPlaying, type NowPlaying } from '@/lib/spectrum/loadNowPlaying';
 
-// Spotify-style card naming the song the background is visualising. Shares the
-// background's single load, and fades in alongside the spectrum crossfade.
+// Spotify-style card naming the song I last played. Metadata only — the
+// homepage background is the patch, not this track.
 
 const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
@@ -22,7 +22,7 @@ function timeAgo(iso: string) {
 }
 
 // Until the album art is analysed (or if that fails).
-const DEFAULT_EQ_COLOR = '#141414';
+const DEFAULT_EQ_COLOR = 'var(--hot)';
 
 function EqualizerIcon({ color }: { color: string }) {
   return (
@@ -39,20 +39,17 @@ function EqualizerIcon({ color }: { color: string }) {
 }
 
 export function NowPlayingCard() {
-  const [data, setData] = useState<NowPlayingSpectrum | null>(null);
+  const [track, setTrack] = useState<NowPlaying | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    loadNowPlayingSpectrum()
-      .then((result) => !cancelled && setData(result))
-      .catch(() => {}); // the background already logs; no card is the fallback
+    loadNowPlaying()
+      .then((result) => !cancelled && setTrack(result))
+      .catch(() => {}); // no card is the fallback
     return () => {
       cancelled = true;
     };
   }, []);
-
-  const track = data?.track;
-  const visualising = Boolean(data?.spectrogram);
 
   // Equalizer bars take the album cover's majority colour.
   const [eqColor, setEqColor] = useState(DEFAULT_EQ_COLOR);
@@ -70,8 +67,8 @@ export function NowPlayingCard() {
 
   return (
     <div
-      className={`fixed top-4 right-4 w-72 max-w-[calc(100vw-2rem)] transition-all duration-[1500ms] ease-out ${
-        track ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+      className={`fixed bottom-8 left-4 w-72 max-w-[calc(100vw-11rem)] transition-all duration-[1500ms] ease-out ${
+        track ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
       }`}
     >
       {track && (
@@ -80,26 +77,25 @@ export function NowPlayingCard() {
           target='_blank'
           rel='noreferrer'
           aria-label={`${track.name} by ${track.artists} on Spotify`}
-          className='group flex items-center gap-3 rounded-lg bg-[#282828]/95 p-2.5 pr-3 shadow-lg shadow-black/40 backdrop-blur-sm transition-colors hover:bg-[#333333]/95'
+          className='glass group flex items-center gap-3 rounded-2xl p-2.5 pr-3'
         >
           {track.albumArt && (
             <img
               src={track.albumArt}
               alt=''
-              className='h-14 w-14 flex-shrink-0 rounded-md object-cover shadow-md shadow-black/50'
+              className='h-12 w-12 flex-shrink-0 rounded-lg object-cover'
             />
           )}
           <div className='min-w-0 flex-grow'>
-            <div className='mb-1 flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[#b3b3b3]'>
-              {visualising && <EqualizerIcon color={eqColor} />}
-              <span className='truncate'>
-                {visualising ? 'Visualizing' : 'Last played'} · {timeAgo(track.playedAt)}
+            <div className='mb-1 flex items-center gap-1.5 text-[10px] tracking-wider text-muted-foreground'>
+              <EqualizerIcon color={eqColor} />
+              <span className='truncate'>Last played · {timeAgo(track.playedAt)}
               </span>
             </div>
-            <p className='truncate text-sm font-bold text-white group-hover:underline'>
+            <p className='truncate text-xs font-medium text-foreground group-hover:underline'>
               {track.name}
             </p>
-            <p className='truncate text-xs text-[#b3b3b3]'>{track.artists}</p>
+            <p className='truncate text-xs text-muted-foreground'>{track.artists}</p>
           </div>
         </a>
       )}

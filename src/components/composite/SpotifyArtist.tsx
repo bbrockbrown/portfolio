@@ -7,7 +7,12 @@ interface SpotifyArtistProps {
   showNumber?: boolean;
 }
 
-export default function SpotifyArtist({ artist, index, showAll = false, showNumber = true }: SpotifyArtistProps) {
+export default function SpotifyArtist({
+  artist,
+  index,
+  showAll = false,
+  showNumber = true,
+}: SpotifyArtistProps) {
   const shouldShow = showAll || index < 3;
 
   if (!shouldShow) return null;
@@ -24,7 +29,9 @@ export default function SpotifyArtist({ artist, index, showAll = false, showNumb
       }}
       className='flex items-center space-x-4 p-3 rounded-md hover:bg-accent/50 transition-colors group'
     >
-      {showNumber && <div className='flex-shrink-0 text-sm text-muted-foreground w-6'>#{index + 1}</div>}
+      {showNumber && (
+        <div className='flex-shrink-0 text-sm text-muted-foreground w-6'>#{index + 1}</div>
+      )}
 
       {artist.images[0] && (
         <motion.img
@@ -50,10 +57,10 @@ export default function SpotifyArtist({ artist, index, showAll = false, showNumb
           {artist.followers.total.toLocaleString()} followers
         </p>
         {/* nbsp keeps the row height equal to track rows when there are no genres */}
-        <p className='text-xs text-muted-foreground truncate'>{artist.genres.slice(0, 3).join(', ') || ' '}</p>
+        <p className='text-xs text-muted-foreground truncate'>
+          {artist.genres.slice(0, 3).join(', ') || ' '}
+        </p>
       </div>
-
-      <div className='flex-shrink-0 text-xs text-muted-foreground'>{Math.round(artist.popularity)}%</div>
     </motion.div>
   );
 }

@@ -5,6 +5,30 @@
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Brock Brown</title>
+    <script>
+      // Apply the saved theme before first paint (ThemeProvider takes over after mount).
+      (function () {
+        var t = 'dark';
+        try { t = localStorage.getItem('vite-ui-theme') || 'dark'; } catch (e) {}
+        if (t === 'system') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.classList.add(t === 'light' ? 'light' : 'dark');
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Site font loads without blocking first paint (display=swap). -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..700&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400..700&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

@@ -1,106 +1,45 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import {
-  Briefcase,
-  ChartColumn,
-  FolderClosed,
-  Handshake,
-  House,
-  type LucideIcon,
-  PersonStanding,
-} from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ModeToggle } from '@/components/mode-toggle';
+import { useScope } from '@/lib/audio/scopeContext';
+import { cn } from '@/lib/utils';
 
-interface NavMenuProps {
-  className?: string;
-}
-
-interface NavItem {
-  id: string;
-  to: string;
-  icon: LucideIcon;
-}
-
-const items: NavItem[] = [
-  {
-    id: 'Home',
-    to: '/',
-    icon: House,
-  },
-  {
-    id: 'Projects',
-    to: '/projects',
-    icon: FolderClosed,
-  },
-  {
-    id: 'Experience',
-    to: '/experience',
-    icon: Briefcase,
-  },
-  {
-    id: 'About',
-    to: '/about',
-    icon: PersonStanding,
-  },
-  {
-    id: 'Stats',
-    to: '/stats',
-    icon: ChartColumn,
-  },
-  {
-    id: 'Connect',
-    to:'/about#connect',
-    icon: Handshake,
-  }
+const items = [
+  { label: 'home', to: '/' },
+  { label: 'projects', to: '/projects' },
+  { label: 'experience', to: '/experience' },
+  { label: 'about', to: '/about' },
+  { label: 'stats', to: '/stats' },
 ];
 
-export default function NavMenu({ className }: NavMenuProps) {
-  const location = useLocation();
-  const [showAnimation, setShowAnimation] = useState(false);
-  const isHomePage = location.pathname === '/';
+const itemClass = 'py-0.5 text-muted-foreground transition-colors hover:text-foreground sm:px-1';
 
-  useEffect(() => {
-    if (isHomePage) {
-      const timer = setTimeout(() => {
-        setShowAnimation(true);
-      }, 500);
-      return () => clearTimeout(timer);
-    } else {
-      setShowAnimation(true);
-    }
-  }, [location.pathname, isHomePage]);
+export default function NavMenu() {
+  const { playing, toggle } = useScope();
 
   return (
-    <div
+    <nav
       id='nav-menu'
-      className={`fixed flex flex-row gap-1 left-1/2 bottom-8 -translate-x-1/2 border backdrop-blur-lg z-50 rounded-md px-3 py-2 ${className}
-                  ${isHomePage ? 'transition-all duration-1000 ease-out' : ''}
-                  ${
-                    showAnimation
-                      ? `opacity-100 scale-100 ${isHomePage ? 'animate-bounce-gentle' : ''}`
-                      : 'opacity-0 scale-75'
-                  }`}
+      aria-label='Primary'
+      className='glass fixed inset-x-0 top-3 mx-auto flex w-fit max-w-[calc(100vw-24px)] flex-wrap items-center justify-center gap-x-2.5 gap-y-0.5 rounded-2xl px-3 py-1.5 text-[11px] sm:gap-x-5 sm:rounded-full sm:px-5 sm:text-xs'
+      style={{ zIndex: 50 }}
     >
-      {items.map((item: NavItem) => {
-        const IconComponent = item.icon;
-        return (
-          <Tooltip key={item.id}>
-            <TooltipTrigger asChild>
-              <Link
-                key={item.id}
-                to={item.to}
-                className='group p-2 hover:bg-gray-700/50 rounded-md transition-colors'
-              >
-                <IconComponent className='w-5 h-5 text-gray-400 group-hover:text-white transition-all' />
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{item.id}</p>
-            </TooltipContent>
-          </Tooltip>
-        );
-      })}
-    </div>
+      {items.map((item) => (
+        <NavLink
+          key={item.to}
+          to={item.to}
+          end
+          className={({ isActive }) => cn(itemClass, isActive && 'font-medium text-foreground')}
+        >
+          {item.label}
+        </NavLink>
+      ))}
+      <ModeToggle className={itemClass} />
+      {playing && (
+        <button type='button' onClick={() => void toggle()} className={cn(itemClass, 'text-hot')}>
+          ■ stop
+        </button>
+      )}
+    </nav>
   );
 }

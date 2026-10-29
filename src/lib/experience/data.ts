@@ -61,11 +61,34 @@ export const sides: Side[] = [
         description:
           'Delivered two production client apps with role-based access control and Salesforce CRM integration (55% conversion from 250+ leads), with React/TypeScript frontends that cut API calls by 45% and FastAPI services on Supabase Postgres enforcing multi-tenant row-level security.',
       },
+      {
+        id: 'mayfest',
+        org: 'Mayfest Productions (Dillo Day)',
+        role: 'Tech Team · Mobile (Expo/React Native)',
+        location: 'Evanston, IL',
+        start: '2026-02',
+        end: 'present',
+        description:
+          "Shipped the official Dillo Day 2026 app (10,000+ downloads). Built its tilt-controlled racing game on the phone's accelerometer with a Firestore leaderboard that keeps each player's best score transactionally, moved sponsor content from bundled assets to Firebase, and built the app's navigation, banners, and info screens.",
+      },
     ],
   },
 ];
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'June',
+  'July',
+  'Aug',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 const parse = (ym: string) => {
   const [y, m] = ym.split('-').map(Number);
