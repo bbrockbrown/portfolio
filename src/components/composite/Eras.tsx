@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, SwitchCamera, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -21,8 +22,6 @@ export default function Eras() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
   const [imagePopupOpen, setImagePopupOpen] = useState(false);
-  const [containerDimensions, setContainerDimensions] = useState({ width: 0, height: 0 });
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const eras: Era[] = [
     {
@@ -105,21 +104,7 @@ export default function Eras() {
   const currentEra = eras[currentIndex];
 
   const openImagePopup = () => {
-    if (!currentEra.image_url.includes('placeholder') && containerRef.current) {
-      const isMobile = window.innerWidth < 768; // md breakpoint
-      if (isMobile) {
-        // On mobile, use larger dimensions for better viewing
-        setContainerDimensions({
-          width: window.innerWidth * 0.9,
-          height: window.innerHeight * 0.7,
-        });
-      } else {
-        // On desktop, use container dimensions
-        const rect = containerRef.current.getBoundingClientRect();
-        setContainerDimensions({ width: rect.width, height: rect.height });
-      }
-      setImagePopupOpen(true);
-    }
+    if (!currentEra.image_url.includes('placeholder')) setImagePopupOpen(true);
   };
 
   const closeImagePopup = () => {
@@ -132,7 +117,6 @@ export default function Eras() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      ref={containerRef}
     >
       <div className='flex items-center justify-between mb-6'>
         <div className='flex items-center space-x-3'>
@@ -257,62 +241,69 @@ export default function Eras() {
         </button>
       </div>
 
-      {/* Image Popup Modal */}
-      <AnimatePresence>
-        {imagePopupOpen && (
-          <motion.div
-            className='fixed inset-0 z-50 flex items-center justify-center bg-black/90 rounded-xl overflow-hidden'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeImagePopup}
-          >
+      {/* Image Popup Modal. Portaled to <body>: inside the card it's trapped in the
+          card's stacking context (every Stats card is a grid item with z-index 10),
+          so later cards paint over it. Inline z-index opts out of index.css's
+          global z-index rule. */}
+      {createPortal(
+        <AnimatePresence>
+          {imagePopupOpen && (
             <motion.div
-              className='relative rounded-xl overflow-hidden'
-              style={{
-                width: containerDimensions.width,
-                height: containerDimensions.height,
-              }}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
+              className='fixed inset-0 flex items-center justify-center bg-black/90'
+              style={{ zIndex: 100 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeImagePopup}
             >
-              {/* Close Button */}
-              <button
-                onClick={closeImagePopup}
-                className='absolute top-2 right-2 z-10 p-1 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors'
-                aria-label='Close image'
+              <motion.div
+                className='relative w-[90vw] h-[80vh] max-w-4xl max-h-screen rounded-lg overflow-hidden bg-black flex items-center justify-center'
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
               >
-                <X className='w-5 h-5' />
-              </button>
+                <div className='relative max-w-full max-h-full rounded-lg overflow-hidden'>
+                  {/* Close Button */}
+                  <button
+                    onClick={closeImagePopup}
+                    className='absolute top-3 right-3 z-10 p-1.5 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors'
+                    aria-label='Close image'
+                  >
+                    <X className='w-5 h-5' />
+                  </button>
 
-              {/* Image */}
-              <img
-                src={currentEra.image_url}
-                alt={currentEra.title}
-                className='w-full h-full md:object-cover object-contain rounded-lg'
-              />
+                  {/* Image: contain, so collages aren't cropped */}
+                  <img
+                    src={currentEra.image_url}
+                    alt={currentEra.title}
+                    className='max-w-full max-h-[80vh] object-contain rounded-lg'
+                  />
 
-              {/* Image Caption */}
-              <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-lg'>
-                {currentEra.img_caption ? (
-                  <div>
-                    <p className='text-white text-xs'>{currentEra.img_caption[0]}</p>
-                    <p className='text-white text-xs'>{currentEra.img_caption[1]}</p>
+                  {/* Image Caption */}
+                  <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-lg'>
+                    {currentEra.img_caption ? (
+                      <div>
+                        <p className='text-white text-xs'>{currentEra.img_caption[0]}</p>
+                        <p className='text-white text-xs'>{currentEra.img_caption[1]}</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <h3 className='text-white font-semibold text-lg mb-1'>
+                          {currentEra.title}
+                        </h3>
+                        <p className='text-gray-300 text-xs'>{currentEra.date}</p>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div>
-                    <h3 className='text-white font-semibold text-lg mb-1'>{currentEra.title}</h3>
-                    <p className='text-gray-300 text-xs'>{currentEra.date}</p>
-                  </div>
-                )}
-              </div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </motion.div>
   );
 }
