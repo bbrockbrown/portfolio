@@ -1,17 +1,13 @@
 import { useEffect, useRef } from 'react';
 
-import { DEFAULT_CUTOFF, freqToUnit, STEP, STEPS, unitToCutoff } from '@/lib/audio/patch';
+import { ACID, DEFAULT_CUTOFF, freqToUnit, STEP, STEPS, unitToCutoff } from '@/lib/audio/patch';
+import type { Readout } from '@/lib/audio/scopeContext';
 import { simRow } from '@/lib/audio/spectrumModel';
 import type { Synth } from '@/lib/audio/synth';
 
 // Full-viewport ASCII spectrogram of the site's patch, behind every page. Everything per-frame
 // (grid, cutoff, clock) lives inside the effect; React only hears about the
 // readout, and only when a value it shows actually changes.
-
-export interface Readout {
-  step: number; // 0..15
-  cutoff: number; // Hz
-}
 
 interface Props {
   synth: Synth;
@@ -97,13 +93,15 @@ export function SpectrogramCanvas({ synth, onReadout }: Props) {
 
     // ---------- readout (only on change) ----------
     let cutoff = DEFAULT_CUTOFF;
-    let shownStep = -1;
+    let shownAbs = -1; // 16ths since the clock started
     let shownCutoff = -1;
-    function report(step: number) {
-      if (step < 0 || (step === shownStep && cutoff === shownCutoff)) return;
-      shownStep = step;
+    function report(abs: number) {
+      if (abs < 0 || (abs === shownAbs && cutoff === shownCutoff)) return;
+      shownAbs = abs;
       shownCutoff = cutoff;
-      onReadoutRef.current({ step, cutoff });
+      const step = abs % STEPS;
+      const bar = Math.floor(abs / STEPS) % ACID.length;
+      onReadoutRef.current({ step, bar, cutoff });
     }
 
     // ---------- draw ----------
@@ -165,7 +163,7 @@ export function SpectrogramCanvas({ synth, onReadout }: Props) {
         pushRow();
         dirty = true;
       }
-      report(synth.playing ? synth.currentStep() : Math.floor(simT / STEP) % STEPS);
+      report(synth.playing ? synth.position() : Math.floor(simT / STEP));
       if (dirty) {
         dirty = false;
         draw();
@@ -186,7 +184,7 @@ export function SpectrogramCanvas({ synth, onReadout }: Props) {
         grid.pop();
         grid.unshift(simRow(simT, cols, cutoff));
       }
-      report(Math.floor(simT / STEP) % STEPS);
+      report(Math.floor(simT / STEP));
       draw();
     }
 
@@ -200,7 +198,7 @@ export function SpectrogramCanvas({ synth, onReadout }: Props) {
       synth.setCutoff(cutoff);
       dirty = true;
       if (reduceMq.matches) {
-        report(shownStep);
+        report(shownAbs);
         draw();
       }
     }

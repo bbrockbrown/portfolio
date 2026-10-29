@@ -14,6 +14,10 @@ export const CLAP = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0];
 export const HAT = [1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1];
 export const OPEN_HAT = [0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0];
 
+/** The drums above, as the Strudel mini-notation shown on the home card.
+ *  mini.test.ts checks it expands to exactly KICK / CLAP / HAT / OPEN_HAT. */
+export const DRUM_PATTERN = 'bd*4, ~ cp ~ cp, [hh hh ~ hh]*4, [~ oh]*4';
+
 /** Acid line: MIDI notes per step, one row per bar; null = rest. Each note is a 16th. */
 export const ACID: (number | null)[][] = [
   [36, 36, 48, null, 36, 39, null, 36, 43, null, 36, 46, 36, null, 48, 39],

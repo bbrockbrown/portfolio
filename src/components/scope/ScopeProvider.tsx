@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ScopeContext } from '@/lib/audio/scopeContext';
+import { createReadoutBus, ScopeContext } from '@/lib/audio/scopeContext';
 import { Synth } from '@/lib/audio/synth';
 
 export function ScopeProvider({ children }: { children: React.ReactNode }) {
   // Creates no AudioContext until the first run click.
   const [synth] = useState(() => new Synth());
   const [playing, setPlaying] = useState(false);
+  const [readout] = useState(createReadoutBus);
 
   const toggle = useCallback(async () => {
     try {
@@ -26,6 +27,9 @@ export function ScopeProvider({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener('visibilitychange', onVisibility);
   }, [synth]);
 
-  const value = useMemo(() => ({ synth, playing, toggle }), [synth, playing, toggle]);
+  const value = useMemo(
+    () => ({ synth, playing, toggle, readout }),
+    [synth, playing, toggle, readout]
+  );
   return <ScopeContext.Provider value={value}>{children}</ScopeContext.Provider>;
 }

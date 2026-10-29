@@ -80,6 +80,21 @@
   color: var(--foreground);
   text-decoration-color: var(--hot);
 }
+/* Strudel-style active-event highlight on the music lines. Outline + background
+   only, so lighting a token never reflows the line. */
+.patch-card .tok {
+  border-radius: 2px;
+  outline: 1px solid transparent;
+  outline-offset: 1px;
+  transition:
+    outline-color 0.12s ease-out,
+    background-color 0.12s ease-out;
+}
+.patch-card .tok.on {
+  outline-color: var(--hot);
+  background: color-mix(in srgb, var(--hot) 18%, transparent);
+  transition: none;
+}
 .patch-card .flash {
   animation: patch-flash 0.5s ease-out;
 }

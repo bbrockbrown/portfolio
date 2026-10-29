@@ -88,10 +88,10 @@ export class Synth {
     if (this.playing) this.ac?.resume().catch(() => {});
   }
 
-  /** Current 16th-note step (0..15) of the playing clock, or -1 if stopped. */
-  currentStep() {
+  /** 16ths elapsed since start (step = n % 16, bar = ⌊n / 16⌋), or -1 if stopped. */
+  position() {
     if (!this.playing || !this.ac) return -1;
-    return Math.floor((this.ac.currentTime - this.t0) / STEP) % STEPS;
+    return Math.max(0, Math.floor((this.ac.currentTime - this.t0) / STEP));
   }
 
   /** Analyser magnitudes resampled onto the shared `cols`-wide log axis, 0..1. */
