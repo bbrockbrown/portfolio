@@ -1,5 +1,4 @@
 import { PatchCard } from '@/components/home/PatchCard';
-import { NowPlayingCard } from '@/components/NowPlayingCard';
 
 import '@/components/home/home.css';
 
@@ -8,7 +7,7 @@ import '@/components/home/home.css';
 export default function Home() {
   return (
     <div className='home'>
-      <NowPlayingCard />
+      {/* <NowPlayingCard /> */}
       <section className='full-viewport-height'>
         <PatchCard />
       </section>

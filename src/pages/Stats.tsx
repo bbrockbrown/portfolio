@@ -83,7 +83,7 @@ export default function Stats() {
     <>
       <section className='min-h-screen px-2 sm:px-6 md:px-8 pt-20 pb-12 sm:pt-24 sm:pb-16 relative z-10'>
         <div className='glass p-4 sm:p-8 md:p-10 max-w-6xl mx-auto'>
-          <SectionHeader title='Stats' subtitle='A peek into my personal and digital life!' />
+          <SectionHeader title='Stats' />
 
           {/* GitHub Activity - Full Width */}
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8'>
@@ -95,10 +95,14 @@ export default function Stats() {
                   <div className='flex items-center justify-between mb-4 sm:mb-6'>
                     <div className='flex items-center space-x-2 sm:space-x-3'>
                       <div className='w-4 h-4 sm:w-5 sm:h-5 bg-muted rounded animate-pulse' />
-                      <span className='text-foreground font-medium text-base sm:text-lg'>GitHub</span>
+                      <span className='text-foreground font-medium text-base sm:text-lg'>
+                        GitHub
+                      </span>
                     </div>
                     <div className='bg-muted/60 px-2 py-1 sm:px-3 rounded-full'>
-                      <span className='text-foreground/80 text-xs sm:text-sm font-medium'>Last 25 weeks</span>
+                      <span className='text-foreground/80 text-xs sm:text-sm font-medium'>
+                        Last 25 weeks
+                      </span>
                     </div>
                   </div>
 
@@ -108,7 +112,10 @@ export default function Stats() {
                       {Array.from({ length: 7 }).map((_, dayIndex) => (
                         <div key={dayIndex} className='flex space-x-0.5 sm:space-x-1'>
                           {Array.from({ length: 25 }).map((_, weekIndex) => (
-                            <div key={weekIndex} className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-foreground/[0.07] rounded-sm animate-pulse' />
+                            <div
+                              key={weekIndex}
+                              className='w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 bg-foreground/[0.07] rounded-sm animate-pulse'
+                            />
                           ))}
                         </div>
                       ))}

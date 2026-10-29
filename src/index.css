@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -56,7 +56,7 @@
   --hot: #5b21b6;
   --str: #7a4fb5;
   --scope-mid: #aca7b8;
-  --scope-opacity: 0.46;
+  --scope-opacity: 0.38;
   --glass-tint: 70%;
   --glass-edge: rgb(255 255 255 / 0.55);
 }
@@ -90,7 +90,8 @@ html.light {
 
 /* Prevent viewport changes on mobile scroll */
 @media (max-width: 768px) {
-  html, body {
+  html,
+  body {
     /* Use fixed viewport height to prevent browser UI changes */
     height: 100vh !important;
     height: 100dvh !important;
@@ -242,7 +243,7 @@ button:focus-visible {
 
 /* Site-wide stacking scaffold: keep positioned content above the fixed background
    layer. Elements opt out with an explicit inline z-index (e.g. the ASCII field). */
-*:not([style*="z-index"]) {
+*:not([style*='z-index']) {
   z-index: 10;
 }
 
@@ -275,7 +276,7 @@ button:focus-visible {
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
   100% {
-    transform: scale(1.0);
+    transform: scale(1);
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
@@ -313,11 +314,22 @@ button:focus-visible {
   height: 300px;
   background-color: #000000;
   background-repeat: no-repeat;
-  background-size: 50% 50%, 50% 50%;
-  background-position: 0 0, 100% 0, 100% 100%, 0 100%;
-  background-image: linear-gradient(var(--background), var(--background)), linear-gradient(#ffffff, #ffffff), linear-gradient(var(--background), var(--background)), linear-gradient(#ffffff, #ffffff);
+  background-size:
+    50% 50%,
+    50% 50%;
+  background-position:
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
+  background-image:
+    linear-gradient(var(--background), var(--background)), linear-gradient(#ffffff, #ffffff),
+    linear-gradient(var(--background), var(--background)), linear-gradient(#ffffff, #ffffff);
   border-radius: 50%;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3), 0 0 60px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 20px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 255, 255, 0.3),
+    0 0 60px rgba(255, 255, 255, 0.1);
 }
 
 .circle-animation.circle-animation::before {
@@ -332,5 +344,3 @@ button:focus-visible {
   height: calc(100% - 2px);
   background: var(--background);
 }
-
-

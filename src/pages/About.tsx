@@ -127,8 +127,8 @@ export default function About() {
               controls and going pretty deep on App Intents. before that, i was a full-stack intern
               at Barton Studio in San Diego, where i got to work directly with clients on both of my
               projects. on campus, i'm on the Mayfest Productions tech team. we shipped the official
-              Dillo Day app (6,000+ downloads!), and right now i'm building internal tools that make
-              life easier for the teams around us.
+              Dillo Day app (10,000+ downloads!), and right now i'm building internal tools that
+              make life easier for the teams around us.
             </p>
             {/* Paragraph 4 - Personal Life */}
             <p className={paragraph}>
