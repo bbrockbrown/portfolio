@@ -5,6 +5,18 @@ import { colFreq, DEFAULT_CUTOFF, HAT, KICK, LEAD, mtof, SNARE, STEP, STEPS } fr
 
 const LOOKAHEAD_S = 0.12;
 const TICK_MS = 25;
+const OUTPUT_GAIN = 1.6;
+
+/** tanh curve scaled to ±0.95; ~unity small-signal gain after the 0.5 drive. */
+function softClipCurve(n = 2048, k = 2.2) {
+  const curve = new Float32Array(n);
+  const norm = 0.95 / Math.tanh(k);
+  for (let i = 0; i < n; i++) {
+    const x = (i / (n - 1)) * 2 - 1;
+    curve[i] = Math.tanh(k * x) * norm;
+  }
+  return curve;
+}
 
 type Ctor = typeof AudioContext;
 
@@ -26,6 +38,10 @@ export class Synth {
     // Claim the flag before awaiting so a second click can't start a second scheduler.
     this.playing = true;
     try {
+      // iOS mutes Web Audio under the ring/silent switch unless the page's audio
+      // session is 'playback' (Safari 16.4+; a no-op elsewhere).
+      const session = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
+      if (session) session.type = 'playback';
       // build() + resume() run synchronously inside the click, which iOS requires.
       const ac = this.ac ?? this.build();
       await ac.resume();
@@ -89,9 +105,25 @@ export class Synth {
     const AC: Ctor =
       window.AudioContext ?? (window as unknown as { webkitAudioContext: Ctor }).webkitAudioContext;
     const ac = new AC();
+    // Gentle bus compression + makeup gain: the defaults (-24 dB, 12:1) squashed
+    // the mix to ~-26 dBFS RMS, near-silent on laptop/phone speakers.
     const comp = ac.createDynamicsCompressor();
+    comp.threshold.value = -16;
+    comp.knee.value = 6;
+    comp.ratio.value = 4;
+    comp.attack.value = 0.003;
+    comp.release.value = 0.2;
+    const makeup = ac.createGain();
+    makeup.gain.value = OUTPUT_GAIN;
+    // Kick transients still overshoot (and the compressor adds its own auto
+    // makeup), so finish with a tanh soft clipper: output never exceeds 0.95.
+    const drive = ac.createGain();
+    drive.gain.value = 0.5; // inputs up to ±2 land inside the curve's ±1 domain
+    const clipper = ac.createWaveShaper();
+    clipper.curve = softClipCurve();
+    clipper.oversample = '2x';
     const master = ac.createGain();
-    master.gain.value = 0.55;
+    master.gain.value = 0.8;
     const analyser = ac.createAnalyser();
     analyser.fftSize = 4096;
     analyser.smoothingTimeConstant = 0.55;
@@ -101,7 +133,10 @@ export class Synth {
     filter.frequency.value = this.cutoff;
     filter.connect(master);
     master.connect(comp);
-    comp.connect(analyser);
+    comp.connect(makeup);
+    makeup.connect(drive);
+    drive.connect(clipper);
+    clipper.connect(analyser);
     analyser.connect(ac.destination);
 
     const len = ac.sampleRate * 0.5;
@@ -150,6 +185,18 @@ export class Synth {
     o.connect(v).connect(this.bus!);
     o.start(t);
     o.stop(t + 0.4);
+
+    // Small speakers can't reproduce the 42-150 Hz body, so add a short
+    // mid-range knock that carries the beat on a laptop or phone.
+    const k = ac.createOscillator();
+    const kv = ac.createGain();
+    k.type = 'triangle';
+    k.frequency.setValueAtTime(420, t);
+    k.frequency.exponentialRampToValueAtTime(110, t + 0.04);
+    this.env(kv, t, 0.45, 0.06);
+    k.connect(kv).connect(this.bus!);
+    k.start(t);
+    k.stop(t + 0.08);
   }
 
   private noise(t: number, type: BiquadFilterType, f: number, peak: number, decay: number) {
@@ -182,7 +229,7 @@ export class Synth {
   private lead(t: number, m: number) {
     const ac = this.ac!;
     const v = ac.createGain();
-    this.env(v, t, 0.16, STEP * 2.2);
+    this.env(v, t, 0.26, STEP * 2.2);
     for (const det of [-12, 12]) {
       const o = ac.createOscillator();
       o.type = 'sawtooth';
