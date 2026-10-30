@@ -39,3 +39,9 @@
     right: max(16px, calc(env(safe-area-inset-right, 0px) + 16px));
   }
 }
+/* …and only on the homepage: elsewhere it would sit on top of page content. */
+@media (max-width: 760px) {
+  body:not(:has(.home)) .scope-readout {
+    display: none;
+  }
+}

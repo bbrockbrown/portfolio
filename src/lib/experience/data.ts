@@ -44,7 +44,7 @@ export const sides: Side[] = [
       {
         id: 'apple',
         org: 'Apple',
-        role: 'Software Engineering Intern · Siri & AI/ML (Speech/Audio)',
+        role: 'Software Engineering Intern · Siri (Audio/Playback Controls)',
         location: 'Cupertino, CA',
         start: '2026-06',
         end: 'present',
@@ -70,6 +70,22 @@ export const sides: Side[] = [
         end: 'present',
         description:
           "Shipped the official Dillo Day 2026 app (10,000+ downloads). Built its tilt-controlled racing game on the phone's accelerometer with a Firestore leaderboard that keeps each player's best score transactionally, moved sponsor content from bundled assets to Firebase, and built the app's navigation, banners, and info screens.",
+      },
+    ],
+  },
+  {
+    side: 'C',
+    title: 'Leadership',
+    entries: [
+      {
+        id: 'disc',
+        org: 'DISC (Develop & Innovate for Social Change)',
+        role: 'Co-President · 300+ member full-stack dev club',
+        location: 'Evanston, IL',
+        start: '2025-03',
+        end: 'present',
+        description:
+          'Built the Docusaurus documentation template, with a CI/CD pipeline that deploys on every merge, that replaced ad-hoc Google Docs and has been adopted by 20 student teams over 2 years.',
       },
     ],
   },
