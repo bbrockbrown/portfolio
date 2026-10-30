@@ -73,6 +73,22 @@ export const sides: Side[] = [
       },
     ],
   },
+  {
+    side: 'C',
+    title: 'Leadership',
+    entries: [
+      {
+        id: 'disc',
+        org: 'DISC (Develop & Innovate for Social Change)',
+        role: 'Co-President · 300+ member full-stack dev club',
+        location: 'Evanston, IL',
+        start: '2025-03',
+        end: 'present',
+        description:
+          'Built the Docusaurus documentation template, with a CI/CD pipeline that deploys on every merge, that replaced ad-hoc Google Docs and has been adopted by 20 student teams over 2 years.',
+      },
+    ],
+  },
 ];
 
 const MONTHS = [
