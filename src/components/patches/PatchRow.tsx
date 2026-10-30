@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 import { getTag } from '@/lib/patches/tags';
 import type { Project } from '@/lib/patches/types';
 
@@ -13,6 +15,16 @@ function Jack({ href, label }: { href: string; label: string }) {
     >
       {label}↗
     </a>
+  );
+}
+
+function Jacks({ links }: { links: Project['links'] }) {
+  return (
+    <span className='flex items-center gap-3'>
+      {links.demo && <Jack href={links.demo} label='DEMO' />}
+      {links.github && <Jack href={links.github} label='GH' />}
+      {links.writeup && <Jack href={links.writeup} label='NOTES' />}
+    </span>
   );
 }
 
@@ -36,34 +48,42 @@ export function PatchRow({ project, index }: { project: Project; index: number }
 
         {/* name + tech + description */}
         <div className='min-w-0 flex-1'>
-          <div className='flex items-baseline gap-3'>
-            <h3 className='truncate text-base font-semibold text-foreground sm:text-lg'>{name}</h3>
+          <div className='flex flex-wrap items-baseline gap-x-3'>
+            <h3 className='text-base font-semibold leading-snug text-foreground sm:truncate sm:text-lg'>
+              {name}
+            </h3>
             <span className='shrink-0 font-mono text-[0.7rem] tracking-widest text-muted-foreground'>
               {category}
             </span>
           </div>
           <p className='mt-1.5 font-mono text-[0.7rem] leading-relaxed tracking-wider text-muted-foreground'>
+            {/* Each tag + its separator stays together; the space between them lets the line wrap. */}
             {tech.map((id, i) => (
-              <span key={id}>
-                {i > 0 && <span className='px-1.5 text-border'>·</span>}
-                {getTag(id)?.label ?? id}
-              </span>
+              <Fragment key={id}>
+                <span className='whitespace-nowrap'>
+                  {getTag(id)?.label ?? id}
+                  {i < tech.length - 1 && <span className='pl-1.5 text-border'>·</span>}
+                </span>{' '}
+              </Fragment>
             ))}
           </p>
           {/* Same treatment as Experience entries. */}
           <p className='mt-2.5 text-sm leading-relaxed text-foreground/80'>{description}</p>
+          {/* Phones: year + links sit under the description instead of in a side column. */}
+          <div className='mt-2.5 flex items-baseline gap-4 sm:hidden'>
+            <span className='font-mono text-xs tabular-nums tracking-wider text-muted-foreground'>
+              {year}
+            </span>
+            <Jacks links={links} />
+          </div>
         </div>
 
         {/* year + links */}
-        <div className='flex shrink-0 flex-col items-end gap-1.5 sm:flex-row sm:items-baseline sm:gap-4'>
+        <div className='hidden shrink-0 items-baseline gap-4 sm:flex'>
           <span className='font-mono text-xs tabular-nums tracking-wider text-muted-foreground group-hover:text-foreground'>
             {year}
           </span>
-          <span className='flex items-center gap-3'>
-            {links.demo && <Jack href={links.demo} label='DEMO' />}
-            {links.github && <Jack href={links.github} label='GH' />}
-            {links.writeup && <Jack href={links.writeup} label='NOTES' />}
-          </span>
+          <Jacks links={links} />
         </div>
       </div>
     </li>
