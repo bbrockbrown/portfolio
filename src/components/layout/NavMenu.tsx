@@ -21,7 +21,7 @@ export default function NavMenu() {
     <nav
       id='nav-menu'
       aria-label='Primary'
-      className='glass fixed inset-x-0 top-3 mx-auto flex w-fit max-w-[calc(100vw-24px)] flex-wrap items-center justify-center gap-x-2.5 gap-y-0.5 rounded-2xl px-3 py-1.5 text-[11px] sm:gap-x-5 sm:rounded-full sm:px-5 sm:text-xs'
+      className='glass fixed inset-x-0 top-3 mx-auto flex w-fit max-w-[calc(100vw-24px)] flex-wrap items-center justify-center gap-x-3 gap-y-0.5 rounded-2xl px-3.5 py-1.5 text-[11px] sm:gap-x-5 sm:rounded-full sm:px-5 sm:text-xs'
       style={{ zIndex: 50 }}
     >
       {items.map((item) => (
@@ -36,8 +36,13 @@ export default function NavMenu() {
       ))}
       <ModeToggle className={itemClass} />
       {playing && (
-        <button type='button' onClick={() => void toggle()} className={cn(itemClass, 'text-hot')}>
-          ■ stop
+        <button
+          type='button'
+          onClick={() => void toggle()}
+          className={cn(itemClass, 'text-hot')}
+          aria-label='Stop audio'
+        >
+          ■<span className='hidden sm:inline'> stop</span>
         </button>
       )}
     </nav>

@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { WaveformSignature } from '@/components/patches/WaveformSignature';
 import { type Entry, formatRange, sides, tenureMonths } from '@/lib/experience/data';
@@ -109,6 +109,43 @@ export function Timeline() {
     if (containerRef.current) ro.observe(containerRef.current);
     return () => ro.disconnect();
   }, [measure]);
+
+  // Phones can't hover, so there the active track follows the scroll: the last
+  // track whose dot is above a line that moves down the screen as the page
+  // scrolls (top track at the top of the page, last track at the bottom).
+  useEffect(() => {
+    if (!window.matchMedia('(hover: none)').matches) return;
+    const ids = sides.flatMap((s) => s.entries.map((e) => e.id));
+    let raf = 0;
+    let scroller: Element = document.scrollingElement ?? document.documentElement;
+    const update = () => {
+      raf = 0;
+      const range = scroller.scrollHeight - scroller.clientHeight;
+      const progress = range > 0 ? scroller.scrollTop / range : 0;
+      let id = ids[0];
+      if (progress > 0.99) id = ids[ids.length - 1];
+      else {
+        const line = window.innerHeight * (0.2 + 0.6 * progress);
+        for (const eid of ids) {
+          const top = dots.current.get(eid)?.getBoundingClientRect().top;
+          if (top !== undefined && top <= line) id = eid;
+        }
+      }
+      setActive(id);
+    };
+    // On phones the body is the scroller (index.css), so listen in the capture
+    // phase to catch scrolls from whichever element is scrolling.
+    const onScroll = (e: Event) => {
+      if (e.target instanceof Element) scroller = e.target;
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      document.removeEventListener('scroll', onScroll, { capture: true });
+    };
+  }, []);
 
   const accentAt = (id: string) => (height > 0 ? railColor((dotY[id] ?? 0) / height) : undefined);
   const firstId = sides[0]?.entries[0]?.id;
