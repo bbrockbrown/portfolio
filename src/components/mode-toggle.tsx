@@ -3,7 +3,7 @@ import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
 
-/** Toggle that names the theme you'd switch to ("light" while dark); an icon on phones. */
+/** Sun/moon toggle showing the theme you'd switch to (sun while dark). */
 export function ModeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
   const next = resolvedTheme === 'dark' ? 'light' : 'dark';
@@ -16,8 +16,7 @@ export function ModeToggle({ className }: { className?: string }) {
       className={cn('inline-flex items-center', className)}
       aria-label={`Switch to ${next} theme`}
     >
-      <Icon aria-hidden='true' className='size-3.5 sm:hidden' />
-      <span className='hidden sm:inline'>{next}</span>
+      <Icon aria-hidden='true' className='size-3.5 sm:size-4' />
     </button>
   );
 }
