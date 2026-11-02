@@ -12,7 +12,7 @@ export default function SectionHeader({ title, subtitle }: SectionHeaderProps) {
     <div
       ref={ref}
       className={`
-        mb-8 sm:mb-10 transition-all duration-700 ease-out
+        mb-4 sm:mb-10 transition-all duration-700 ease-out
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
       `}
     >

@@ -13,7 +13,7 @@ export const projects: Project[] = [
     status: 'active',
     links: {},
     description:
-      "Shipped Swift tooling for Siri's on-device LLM planner (Speech/AI-ML): collapsed six cross-process dispatches into one batched request to cut tool wall-clock from 11.7s to 0.9s, and built a second planner tool that discovers its targets at runtime from on-device app metadata — 180+ targets across 39 apps with no per-app code.",
+      "Shipped Swift tooling for Siri's on-device LLM planner (Audio/Playback Controls): collapsed six cross-process dispatches into one batched request to cut tool wall-clock from 11.7s to 0.9s, and built a second planner tool that discovers its targets at runtime from on-device app metadata — 180+ targets across 39 apps with no per-app code.",
     sigSeed: 'Apple — Siri Planner',
   },
   {
@@ -23,8 +23,7 @@ export const projects: Project[] = [
     tech: ['aws', 'node', 'ffmpeg', 'web-audio', 'dynamodb'],
     year: 2026,
     status: 'active',
-    // TODO(brock): add the public repo URL for CloudStem (resume shows [repo]).
-    links: {},
+    links: { github: 'https://github.com/bbrockbrown/cloudstem' },
     description:
       'Event-driven AWS pipeline (S3/SQS/DynamoDB/EC2) that decouples uploads from CPU-bound FFmpeg transcoding; a Node worker emits a 300-point peak-amplitude envelope so the client renders a seekable canvas waveform and Web Audio FFT visualizer, with AES-256 masters decrypted client-side over an S3 presigned URL.',
     sigSeed: 'CloudStem',
@@ -33,11 +32,19 @@ export const projects: Project[] = [
     id: 'bill-splitting',
     name: 'Real-Time Bill Splitting',
     category: 'SYSTEMS',
-    tech: ['nextjs', 'typescript', 'java', 'spring-boot', 'graphql', 'postgresql', 'redis', 'websockets'],
+    tech: [
+      'nextjs',
+      'typescript',
+      'java',
+      'spring-boot',
+      'graphql',
+      'postgresql',
+      'redis',
+      'websockets',
+    ],
     year: 2026,
     status: 'active',
-    // TODO(brock): add the public repo URL for Bill Splitting (resume shows [repo]).
-    links: {},
+    links: { github: 'https://github.com/bbrockbrown/better-bill-splitter' },
     description:
       'Real-time bill-splitting app (Next.js/TypeScript, Java/Spring Boot, GraphQL) with an async OCR pipeline: uploads enqueue Protobuf-serialized jobs to Redis for a background Tesseract worker, parsed line items stream to all clients over STOMP WebSockets, and first-come item claiming is enforced atomically via a PostgreSQL row-level trigger with optimistic UI.',
     sigSeed: 'Real-Time Bill Splitting',
@@ -70,7 +77,16 @@ export const projects: Project[] = [
     id: 'inventory-management',
     name: 'Customized Inventory Management System',
     category: 'TOOL',
-    tech: ['react', 'javascript', 'node', 'postgresql', 'supabase', 'styled-components', 'ag-grid', 'figma'],
+    tech: [
+      'react',
+      'javascript',
+      'node',
+      'postgresql',
+      'supabase',
+      'styled-components',
+      'ag-grid',
+      'figma',
+    ],
     year: 2025,
     status: 'archived',
     links: {},

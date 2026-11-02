@@ -113,7 +113,7 @@ export default function Eras() {
 
   return (
     <motion.div
-      className='border border-border rounded-xl p-6 bg-card/70 hover:bg-card transition-all duration-300'
+      className='border border-border rounded-xl p-4 sm:p-6 bg-card/70 hover:bg-card transition-all duration-300'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -123,8 +123,10 @@ export default function Eras() {
           <SwitchCamera className='w-5 h-5 text-foreground' />
           <span className='text-foreground font-medium text-lg'>Niches/Eras</span>
         </div>
-        <div className='bg-muted/60 px-3 py-1 rounded-full'>
-          <span className='text-foreground/80 text-sm font-medium'>Last 21 years</span>
+        <div className='bg-muted/60 px-2 py-1 sm:px-3 rounded-full shrink-0'>
+          <span className='text-foreground/80 text-xs sm:text-sm font-medium whitespace-nowrap'>
+            Last 21 years
+          </span>
         </div>
       </div>
 
